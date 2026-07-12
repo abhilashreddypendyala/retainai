@@ -17,7 +17,9 @@ retainai-clv-churn
 |   |       customers.py
 |   |       dashboard.py
 |   |       health.py
+|   |       model.py
 |   |       prediction.py
+|   |       reports.py
 |   |
 |   +---config
 |   |       __init__.py
@@ -36,13 +38,17 @@ retainai-clv-churn
 |   |       __init__.py
 |   |       customer.py
 |   |       dashboard.py
+|   |       model.py
 |   |       prediction.py
+|   |       report.py
 |   |
 |   +---services
 |   |       __init__.py
 |   |       customer_service.py
 |   |       dashboard_service.py
+|   |       model_service.py
 |   |       prediction_service.py
+|   |       report_service.py
 |   |
 |   \---utils
 |           __init__.py
@@ -76,6 +82,8 @@ retainai-clv-churn
 |           M05C_Customer_360.md
 |           M06A_Prediction_Backend.md
 |           M06B_Prediction_Center_Frontend.md
+|           M07_Model_Insights.md
+|           M08_Reports_Center.md
 |
 +---frontend
 |   |   app.py
@@ -86,8 +94,10 @@ retainai-clv-churn
 |   |       __init__.py
 |   +---pages
 |   |       Customer_Intelligence.py
-|   |       Prediction_Center.py
 |   |       Dashboard.py
+|   |       Model_Insights.py
+|   |       Prediction_Center.py
+|   |       Reports.py
 |   |       Segmentation_Analytics.py
 |   |
 |   \---utils

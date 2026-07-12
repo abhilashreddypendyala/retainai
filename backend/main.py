@@ -8,6 +8,8 @@ from backend.api.health import router as health_router
 from backend.api.dashboard import router as dashboard_router
 from backend.api.customers import router as customers_router
 from backend.api.prediction import router as prediction_router
+from backend.api.model import router as model_router
+from backend.api.reports import router as reports_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -38,6 +40,8 @@ app.include_router(health_router)
 app.include_router(dashboard_router)
 app.include_router(customers_router)
 app.include_router(prediction_router)
+app.include_router(model_router)
+app.include_router(reports_router)
 
 if __name__ == "__main__":
     import uvicorn

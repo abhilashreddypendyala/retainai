@@ -43,6 +43,16 @@ class APIClient:
         except RequestException as e:
             logger.error(f"API request failed for POST {url}: {e}")
             raise
+            
+    def _get_text(self, endpoint: str) -> str:
+        url = f"{self.base_url.rstrip('/')}{endpoint}"
+        try:
+            response = self.session.get(url, timeout=self.timeout)
+            response.raise_for_status()
+            return response.text
+        except RequestException as e:
+            logger.error(f"API request failed for {url}: {e}")
+            raise
 
     def get_dashboard_summary(self):
         """Fetches the KPI summary cards from the backend."""
@@ -93,5 +103,23 @@ class APIClient:
     def predict_customer(self, features: dict):
         """Generates a churn prediction for the given features."""
         return self._post("/prediction", data=features)
+        
+    def get_model_insights(self):
+        """Fetches the complete model insights and metrics."""
+        return self._get("/model/insights")
+
+    # Reports
+    def get_executive_summary(self):
+        """Fetches the executive summary metrics."""
+        return self._get("/reports/executive-summary")
+        
+    def get_customer_report_csv(self) -> str:
+        return self._get_text("/reports/customer-report")
+        
+    def get_high_risk_report_csv(self) -> str:
+        return self._get_text("/reports/high-risk")
+        
+    def get_segment_summary_csv(self) -> str:
+        return self._get_text("/reports/segment-summary")
 
 api_client = APIClient()
