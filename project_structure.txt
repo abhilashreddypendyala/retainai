@@ -1,0 +1,64 @@
+retainai-clv-churn
+|   .env.example
+|   .gitignore
+|   project_structure.txt
+|   README.md
+|   requirements.txt
+|   
++---.venv
+|   (contents omitted for brevity)
+|
++---backend
+|   |   main.py
+|   |
+|   +---api
+|   +---database
+|   +---ml
+|   +---schemas
+|   \---services
+|
++---data
+|   +---processed
+|   |   |   advanced_features_and_churn.parquet
+|   |   |   cleaned_online_retail.parquet
+|   |   |   master_customer_dataset.parquet
+|   |   |   rfm_and_churn_labels.parquet
+|   |   |   
+|   |   \---exports
+|   |           VIP_Action_List.csv
+|   |           
+|   \---raw
+|           online_retail_II.xlsx
+|
++---database
+|
++---docs
+|   \---milestones
+|
++---frontend
+|   |   app.py
+|   |
+|   +---assets
+|   +---components
+|   +---pages
+|   |       Dashboard.py
+|   |       Segmentation_Analytics.py
+|   |
+|   \---utils
+|           dashboard_utils.py
+|
++---models
+|   \---churn
+|           feature_scaler.pkl
+|           lr_champion.pkl
+|
++---notebooks
+|       01_data_preprocessing_and_cleaning.ipynb
+|       02_time_split_and_rfm.ipynb
+|       03_advanced_feature_engineering.ipynb
+|       04_churn_prediction_modeling.ipynb
+|       05_clv_modeling.ipynb
+|       06_customer_segmentation.ipynb
+|       newplot.png
+|
+\---scripts

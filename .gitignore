@@ -1,0 +1,19 @@
+# Datasets (Never push raw or processed data to GitHub)
+data/raw/*
+data/processed/*
+
+# Models (Often too large for GitHub)
+models/*.pkl
+models/*.joblib
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Virtual Environments
+venv/
+env/
+.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
