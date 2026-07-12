@@ -9,13 +9,36 @@ retainai-clv-churn
 |   (contents omitted for brevity)
 |
 +---backend
+|   |   __init__.py
 |   |   main.py
 |   |
 |   +---api
+|   |       __init__.py
+|   |       dashboard.py
+|   |       health.py
+|   |
+|   +---config
+|   |       __init__.py
+|   |       settings.py
+|   |
 |   +---database
+|   |       __init__.py
+|   |       connection.py
+|   |
 |   +---ml
+|   |       __init__.py
+|   |
 |   +---schemas
-|   \---services
+|   |       __init__.py
+|   |       dashboard.py
+|   |
+|   +---services
+|   |       __init__.py
+|   |       dashboard_service.py
+|   |
+|   \---utils
+|           __init__.py
+|           logger.py
 |
 +---data
 |   +---processed
@@ -37,6 +60,9 @@ retainai-clv-churn
 |   \---milestones
 |           M01_Foundation.md
 |           M02_SQLite_Integration.md
+|           M03_FastAPI_Backend_Foundation.md
+|           M04A_Dashboard_Backend.md
+|           M04B_Dashboard_Frontend_Integration.md
 |
 +---frontend
 |   |   app.py
@@ -48,6 +74,7 @@ retainai-clv-churn
 |   |       Segmentation_Analytics.py
 |   |
 |   \---utils
+|           api_client.py
 |           dashboard_utils.py
 |
 +---models
@@ -66,3 +93,4 @@ retainai-clv-churn
 |
 \---scripts
         create_database.py
+        setup_backend.py
