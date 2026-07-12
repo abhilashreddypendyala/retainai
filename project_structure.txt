@@ -31,9 +31,12 @@ retainai-clv-churn
 |           online_retail_II.xlsx
 |
 +---database
+|       retail.db
 |
 +---docs
 |   \---milestones
+|           M01_Foundation.md
+|           M02_SQLite_Integration.md
 |
 +---frontend
 |   |   app.py
@@ -62,3 +65,4 @@ retainai-clv-churn
 |       newplot.png
 |
 \---scripts
+        create_database.py
