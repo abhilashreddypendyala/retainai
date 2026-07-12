@@ -6,6 +6,8 @@ from backend.config.settings import settings
 from backend.utils.logger import logger
 from backend.api.health import router as health_router
 from backend.api.dashboard import router as dashboard_router
+from backend.api.customers import router as customers_router
+from backend.api.prediction import router as prediction_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -34,6 +36,8 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Include routers
 app.include_router(health_router)
 app.include_router(dashboard_router)
+app.include_router(customers_router)
+app.include_router(prediction_router)
 
 if __name__ == "__main__":
     import uvicorn

@@ -14,8 +14,10 @@ retainai-clv-churn
 |   |
 |   +---api
 |   |       __init__.py
+|   |       customers.py
 |   |       dashboard.py
 |   |       health.py
+|   |       prediction.py
 |   |
 |   +---config
 |   |       __init__.py
@@ -24,17 +26,23 @@ retainai-clv-churn
 |   +---database
 |   |       __init__.py
 |   |       connection.py
+|   |       setup.py
 |   |
 |   +---ml
 |   |       __init__.py
+|   |       model_loader.py
 |   |
 |   +---schemas
 |   |       __init__.py
+|   |       customer.py
 |   |       dashboard.py
+|   |       prediction.py
 |   |
 |   +---services
 |   |       __init__.py
+|   |       customer_service.py
 |   |       dashboard_service.py
+|   |       prediction_service.py
 |   |
 |   \---utils
 |           __init__.py
@@ -63,13 +71,22 @@ retainai-clv-churn
 |           M03_FastAPI_Backend_Foundation.md
 |           M04A_Dashboard_Backend.md
 |           M04B_Dashboard_Frontend_Integration.md
+|           M05A_Customer_Backend_Foundation.md
+|           M05B_Customer_Explorer_Frontend.md
+|           M05C_Customer_360.md
+|           M06A_Prediction_Backend.md
+|           M06B_Prediction_Center_Frontend.md
 |
 +---frontend
 |   |   app.py
 |   |
-|   +---assets
 |   +---components
+|   |       customer_table.py
+|   |       prediction_result.py
+|   |       __init__.py
 |   +---pages
+|   |       Customer_Intelligence.py
+|   |       Prediction_Center.py
 |   |       Dashboard.py
 |   |       Segmentation_Analytics.py
 |   |

@@ -90,13 +90,11 @@ def get_dashboard_interventions() -> list[DashboardIntervention]:
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        # High value customers at risk
+        # Fetch all customers to allow frontend interactive filtering
         cursor.execute("""
             SELECT customer_id, segment, clv, churn_probability, recency, frequency, monetary 
             FROM customers 
-            WHERE churn_prediction = 1 
             ORDER BY clv DESC 
-            LIMIT 50
         """)
         interventions = [DashboardIntervention(
             customer_id=str(row['customer_id']),

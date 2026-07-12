@@ -18,6 +18,7 @@ inject_global_styles()
 
 try:
     with st.spinner("Connecting to backend services..."):
+        # We fetch summary_data just in case we need fallbacks, but we'll calculate KPIs dynamically
         summary_data = api_client.get_dashboard_summary()
         charts_data = api_client.get_dashboard_charts()
         interventions_data = api_client.get_dashboard_interventions()
@@ -41,11 +42,28 @@ st.sidebar.markdown("### Scenario Controls")
 sim_risk = st.sidebar.slider("Churn Risk Threshold (%)", min_value=10, max_value=90, value=50, step=5) / 100.0
 sim_clv = st.sidebar.slider("High-Value Cutoff ($)", min_value=50, max_value=max_clv, value=default_clv, step=50)
 
-# We use the backend summary for the top KPIs to enforce source of truth from SQLite
-total_rev = summary_data.get("projected_revenue", 0)
-rev_at_risk = summary_data.get("revenue_at_risk", 0)
-safe_rev = total_rev - rev_at_risk
-whale_count = summary_data.get("high_risk_customers", 0)
+# ---------------------------------------------------------
+# DYNAMIC KPI CALCULATIONS BASED ON SCENARIO SLIDERS
+# ---------------------------------------------------------
+if not df_scatter.empty:
+    # Total revenue remains the total of all customers
+    total_rev = df_scatter["predicted_90d_clv"].sum()
+    
+    # Revenue at risk: anyone at or above the selected risk threshold
+    at_risk_df = df_scatter[df_scatter["Churn_Probability"] >= sim_risk]
+    rev_at_risk = at_risk_df["predicted_90d_clv"].sum()
+    
+    # Secured revenue is the rest
+    safe_rev = total_rev - rev_at_risk
+    
+    # High-Risk Whales: at or above risk threshold AND at or above value threshold
+    whales_df = at_risk_df[at_risk_df["predicted_90d_clv"] >= sim_clv]
+    whale_count = len(whales_df)
+else:
+    total_rev = summary_data.get("projected_revenue", 0)
+    rev_at_risk = summary_data.get("revenue_at_risk", 0)
+    safe_rev = total_rev - rev_at_risk
+    whale_count = summary_data.get("high_risk_customers", 0)
 
 page_header(
     "RETAIN-AI Overview",
@@ -128,6 +146,13 @@ with tab_overview:
     st.markdown("<div class='section-subtitle'>Customers in the highest-priority segment are listed below.</div>", unsafe_allow_html=True)
 
     vips = pd.DataFrame(interventions_data)
+    if not vips.empty:
+        # Dynamically filter the interventions table based on the slider thresholds!
+        vips = vips[
+            (vips["churn_probability"] >= sim_risk) &
+            (vips["clv"] >= sim_clv)
+        ]
+
     if vips.empty:
         st.info("No High-Risk Whales detected under the current scenario.")
     else:
