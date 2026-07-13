@@ -2,12 +2,12 @@ from backend.schemas.prediction import PredictionRequest, PredictionResponse
 from backend.ml.model_loader import churn_model
 
 def _get_risk_level(prob: float) -> str:
-    if prob < 0.3:
-        return "Low"
-    elif prob < 0.7:
+    if prob >= 0.5:
+        return "High"
+    elif prob >= 0.3:
         return "Medium"
     else:
-        return "High"
+        return "Low"
 
 def generate_prediction(req: PredictionRequest) -> PredictionResponse:
     features = [

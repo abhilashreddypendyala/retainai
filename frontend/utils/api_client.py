@@ -96,9 +96,17 @@ class APIClient:
         endpoint = f"/customers/filter?{query_string}" if query_string else "/customers/filter"
         return self._get(endpoint)
 
-    def get_customer_360(self, customer_id: str):
+    def get_all_customer_ids(self) -> list:
+        """Fetches a flat list of all customer IDs."""
+        return self._get("/customers/ids")
+
+    def get_customer_360(self, customer_id: str, sim_risk: float = None, sim_clv: float = None):
         """Fetches the complete Customer 360 profile."""
-        return self._get(f"/customers/{customer_id}")
+        url = f"/customers/{customer_id}?"
+        params = []
+        if sim_risk is not None: params.append(f"sim_risk={sim_risk}")
+        if sim_clv is not None: params.append(f"sim_clv={sim_clv}")
+        return self._get(url + "&".join(params))
         
     def predict_customer(self, features: dict):
         """Generates a churn prediction for the given features."""

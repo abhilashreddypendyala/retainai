@@ -5,7 +5,6 @@ import plotly.graph_objects as go
 from utils.api_client import api_client
 from utils.dashboard_utils import inject_global_styles, page_header, metric_card
 
-st.set_page_config(page_title="RETAIN-AI | Model Insights", page_icon="🧠", layout="wide")
 inject_global_styles()
 
 page_header(

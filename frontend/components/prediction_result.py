@@ -23,7 +23,8 @@ def render_prediction_result(result_data: dict, action: str):
     with r1: metric_card("Prediction", prediction, "")
     with r2: metric_card("Risk Level", risk_level, "")
     with r3: metric_card("Probability", f"{prob:.1%}", prob_subtext)
-    with r4: metric_card("Confidence", f"{conf:.1%}", "")
+    retention_prob = 1.0 - prob
+    with r4: metric_card("Retention Prob.", f"{retention_prob:.1%}", "")
     
     st.info(f"**Recommended Action:** {action}")
     

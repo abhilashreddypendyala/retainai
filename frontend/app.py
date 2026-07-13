@@ -1,28 +1,23 @@
-# pyright: reportMissingImports=false
-
 import streamlit as st
-
-from utils.dashboard_utils import inject_global_styles, page_header
-
+from utils.dashboard_utils import inject_global_styles
 
 st.set_page_config(page_title="RETAIN-AI", page_icon="💠", layout="wide", initial_sidebar_state="expanded")
 inject_global_styles()
 
-page_header(
-    "RETAIN-AI",
-    "CLV-driven churn prediction and retention optimization",
-    "Customer risk, customer value, and retention actions.",
-    ["Overview", "Customer Segments"],
-)
+dashboard = st.Page("pages/Dashboard.py", title="Dashboard",  default=True)
+segments = st.Page("pages/Segmentation_Analytics.py", title="Segmentation Analytics")
+customer = st.Page("pages/Customer_Intelligence.py", title="Customer Intelligence")
+prediction = st.Page("pages/Prediction_Center.py", title="Prediction Center")
+reports = st.Page("pages/Reports.py", title="Reports")
+model = st.Page("pages/Model_Insights.py", title="Model Insights")
 
-st.markdown("<div class='section-kicker'>Navigation</div>", unsafe_allow_html=True)
-st.markdown("<div class='section-title'>Choose a page</div>", unsafe_allow_html=True)
-st.markdown("<div class='section-subtitle'>Open the dashboard sections below.</div>", unsafe_allow_html=True)
+pg = st.navigation([
+    dashboard,
+    segments,
+    customer,
+    prediction,
+    reports,
+    model
+])
 
-links = st.columns(2)
-with links[0]:
-    st.page_link("pages/Dashboard.py", label="Open Overview", icon="📈")
-with links[1]:
-    st.page_link("pages/Segmentation_Analytics.py", label="Open Segments", icon="📊")
-
-st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+pg.run()

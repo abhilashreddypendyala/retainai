@@ -30,12 +30,11 @@ class CustomerListResponse(BaseModel):
     page_size: int
     items: List[CustomerSummary]
 
-class TransactionItem(BaseModel):
+class OrderSummaryItem(BaseModel):
     invoice: str
     date: str
-    description: str
-    quantity: int
-    unit_price: float
+    items: str
+    total_items_bought: int
     total_amount: float
 
 class Recommendation(BaseModel):
@@ -46,5 +45,5 @@ class Recommendation(BaseModel):
 
 class Customer360Response(BaseModel):
     customer: CustomerProfile
-    recent_transactions: List[TransactionItem]
+    recent_transactions: List[OrderSummaryItem]
     recommendation: Recommendation

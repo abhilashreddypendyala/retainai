@@ -15,6 +15,11 @@ def get_customers(
     """Return a paginated customer list."""
     return service.get_customers(page, page_size, sim_risk, sim_clv)
 
+@router.get("/ids", response_model=List[str])
+def get_all_customer_ids():
+    """Return a flat list of all customer IDs for the frontend dropdown."""
+    return service.get_all_customer_ids()
+
 @router.get("/search", response_model=List[CustomerSummary])
 def search_customers(
     q: str = Query(..., min_length=1, description="Partial customer ID search term"),
@@ -39,7 +44,9 @@ def filter_customers(
 
 @router.get("/{customer_id}", response_model=Customer360Response)
 def get_customer(
-    customer_id: str = Path(..., description="The ID of the customer to retrieve")
+    customer_id: str = Path(..., description="The ID of the customer to retrieve"),
+    sim_risk: Optional[float] = Query(None, description="Dynamic churn risk threshold"),
+    sim_clv: Optional[float] = Query(None, description="Dynamic high-value CLV cutoff")
 ):
     """Return the complete Customer 360 profile."""
-    return service.get_customer_by_id(customer_id)
+    return service.get_customer_by_id(customer_id, sim_risk, sim_clv)

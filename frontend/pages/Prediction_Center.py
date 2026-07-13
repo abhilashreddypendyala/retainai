@@ -5,7 +5,6 @@ from utils.api_client import api_client
 from utils.dashboard_utils import inject_global_styles, page_header, dark_table
 from components.prediction_result import render_prediction_result
 
-st.set_page_config(page_title="RETAIN-AI | Prediction Center", page_icon="🔮", layout="wide")
 inject_global_styles()
 
 page_header(

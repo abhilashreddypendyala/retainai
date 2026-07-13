@@ -5,16 +5,17 @@ import streamlit as st
 from utils.dashboard_utils import build_segmented_frame, dark_table, inject_global_styles, load_data, page_header
 
 
-st.set_page_config(page_title="RETAIN-AI | Segments", page_icon="📊", layout="wide", initial_sidebar_state="expanded")
 inject_global_styles()
 
 df_master = load_data()
 
 st.sidebar.markdown("### Scenario Controls")
-sim_risk = st.sidebar.slider("Churn Risk Threshold (%)", min_value=10, max_value=90, value=50, step=5) / 100.0
-default_clv = int(df_master["predicted_90d_clv"].quantile(0.75))
-max_clv = int(df_master["predicted_90d_clv"].max())
-sim_clv = st.sidebar.slider("High-Value Cutoff ($)", min_value=50, max_value=max_clv, value=default_clv, step=50)
+with st.sidebar.form("segmentation_scenario_form"):
+    sim_risk = st.slider("Churn Risk Threshold (%)", min_value=10, max_value=90, value=50, step=5) / 100.0
+    default_clv = int(df_master["predicted_90d_clv"].quantile(0.75))
+    max_clv = int(df_master["predicted_90d_clv"].max())
+    sim_clv = st.slider("High-Value Cutoff ($)", min_value=50, max_value=max_clv, value=default_clv, step=50)
+    st.form_submit_button("Fetch Data", use_container_width=True)
 
 df_sim = build_segmented_frame(df_master, sim_risk, sim_clv)
 

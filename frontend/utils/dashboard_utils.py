@@ -313,15 +313,19 @@ def inject_global_styles() -> None:
             background: transparent !important;
         }
 
-        .stDownloadButton button {
+        .stButton button, .stDownloadButton button {
             color: #f8fbff !important;
             background: rgba(96, 165, 250, 0.16) !important;
             border: 1px solid rgba(148, 163, 184, 0.22) !important;
+            border-radius: 8px !important;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.2s ease !important;
         }
 
-        .stDownloadButton button:hover {
+        .stButton button:hover, .stDownloadButton button:hover {
             background: rgba(94, 234, 212, 0.22) !important;
             border-color: rgba(94, 234, 212, 0.45) !important;
+            transform: translateY(-1px);
         }
 
         [data-testid="stDataFrame"] button svg,
@@ -349,6 +353,23 @@ def inject_global_styles() -> None:
         .stSlider [data-baseweb="slider"] {
             padding-top: 0.4rem;
             padding-bottom: 0.4rem;
+        }
+        
+        /* Form borders and Alert styling */
+        [data-testid="stForm"] {
+            border: 1px solid rgba(148, 163, 184, 0.18) !important;
+            border-radius: 12px !important;
+        }
+        
+        .stAlert {
+            background: rgba(15, 23, 42, 0.75) !important;
+            border: 1px solid rgba(148, 163, 184, 0.18) !important;
+            border-radius: 12px !important;
+            color: var(--text) !important;
+            backdrop-filter: blur(12px);
+        }
+        [data-testid="stAlert"] svg {
+            fill: var(--text) !important;
         }
         </style>
         """,

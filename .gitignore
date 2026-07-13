@@ -1,19 +1,25 @@
-# Datasets (Never push raw or processed data to GitHub)
-data/raw/*
-data/processed/*
+# Virtual Environment
+.venv/
 
-# Models (Often too large for GitHub)
-models/*.pkl
-models/*.joblib
-
-# Python Cache
+# Python
 __pycache__/
 *.pyc
 
-# Virtual Environments
-venv/
-env/
+# Environment Variables
 .env
 
-# Jupyter Notebook checkpoints
+# Database
+*.db
+
+# Jupyter
 .ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+
+database/retail.db

@@ -1,11 +1,11 @@
 from fastapi import HTTPException
 from typing import List, Optional
 from backend.database.connection import get_db_connection, close_db_connection
-from backend.schemas.customer import CustomerSummary, CustomerProfile, CustomerListResponse, Customer360Response, TransactionItem, Recommendation
+from backend.schemas.customer import CustomerSummary, CustomerProfile, CustomerListResponse, Customer360Response, OrderSummaryItem, Recommendation
 
 def _generate_recommendation(profile: CustomerProfile) -> Recommendation:
     # Deterministic business rules
-    risk = profile.churn_prediction == 1
+    risk = profile.churn_probability >= 0.5
     clv_val = profile.clv
     
     # Threshold for High CLV, let's say $1000 for example, or based on segment
@@ -134,39 +134,50 @@ def get_customers(page: int = 1, page_size: int = 50, sim_risk: Optional[float] 
     finally:
         close_db_connection(conn)
 
-def get_customer_by_id(customer_id: str) -> Customer360Response:
+def get_customer_by_id(customer_id: str, sim_risk: Optional[float] = None, sim_clv: Optional[float] = None) -> Customer360Response:
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        
-        # 1. Fetch Profile
         cursor.execute("SELECT * FROM customers WHERE customer_id = ?", (customer_id,))
         row = cursor.fetchone()
+        
         if not row:
             raise HTTPException(status_code=404, detail="Customer not found")
+            
+        # Apply dynamic segmentation
+        if sim_risk is not None and sim_clv is not None:
+            processed_rows = _apply_dynamic_segments_to_rows([row], sim_risk, sim_clv)
+            row = processed_rows[0]
+            
+        # 1. Base Profile
+        cursor.execute("""
+            SELECT SUM(total_amount) as total_spend, COUNT(DISTINCT invoice) as total_orders 
+            FROM transactions 
+            WHERE customer_id = ?
+        """, (customer_id,))
+        stats = cursor.fetchone()
             
         country_map = _get_countries_for_customers(cursor, [customer_id])
         profile = _row_to_profile(row, country_map.get(customer_id, "Unknown"))
         
-        # 2. Fetch Recent Transactions
+        # 2. Fetch All Orders (Grouped by Invoice)
         cursor.execute("""
-            SELECT invoice, date, description, quantity, unit_price, total_amount
+            SELECT invoice, MAX(date) as date, GROUP_CONCAT(description, ', ') as items, SUM(quantity) as total_items, SUM(total_amount) as total_amount
             FROM transactions
             WHERE customer_id = ?
+            GROUP BY invoice
             ORDER BY date DESC
-            LIMIT 10
         """, (customer_id,))
         
         tx_rows = cursor.fetchall()
         recent_tx = []
         for tx in tx_rows:
             # Handle potential nulls
-            recent_tx.append(TransactionItem(
+            recent_tx.append(OrderSummaryItem(
                 invoice=str(tx['invoice']),
                 date=str(tx['date'])[:10] if tx['date'] else "Unknown",
-                description=str(tx['description']) if tx['description'] else "Unknown",
-                quantity=int(tx['quantity']) if tx['quantity'] else 0,
-                unit_price=float(tx['unit_price']) if tx['unit_price'] else 0.0,
+                items=str(tx['items']) if tx['items'] else "Unknown",
+                total_items_bought=int(tx['total_items']) if tx['total_items'] else 0,
                 total_amount=float(tx['total_amount']) if tx['total_amount'] else 0.0
             ))
             
@@ -198,7 +209,6 @@ def search_customers(query: str, sim_risk: Optional[float] = None, sim_clv: Opti
             FROM customers
             WHERE customer_id LIKE ?
             ORDER BY clv DESC
-            LIMIT 50
         """, (search_term,))
         
         rows = cursor.fetchall()
@@ -257,7 +267,7 @@ def filter_customers(segment: Optional[str] = None, country: Optional[str] = Non
             query += " AND customer_id IN (SELECT customer_id FROM transactions WHERE country = ?)"
             params.append(country)
             
-        query += " ORDER BY clv DESC LIMIT 100"
+        query += " ORDER BY clv DESC"
             
         cursor.execute(query, params)
         rows = cursor.fetchall()
@@ -267,6 +277,17 @@ def filter_customers(segment: Optional[str] = None, country: Optional[str] = Non
         country_map = _get_countries_for_customers(cursor, customer_ids)
         
         return [_row_to_summary(row, country_map.get(str(row['customer_id']), "Unknown")) for row in rows]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        close_db_connection(conn)
+
+def get_all_customer_ids() -> List[str]:
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT customer_id FROM customers ORDER BY customer_id ASC")
+        return [str(row['customer_id']) for row in cursor.fetchall()]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:

@@ -13,7 +13,6 @@ from utils.dashboard_utils import (
 )
 from utils.api_client import api_client
 
-st.set_page_config(page_title="RETAIN-AI | Overview", page_icon="💠", layout="wide", initial_sidebar_state="expanded")
 inject_global_styles()
 
 try:
@@ -39,8 +38,10 @@ else:
     default_clv = 500
 
 st.sidebar.markdown("### Scenario Controls")
-sim_risk = st.sidebar.slider("Churn Risk Threshold (%)", min_value=10, max_value=90, value=50, step=5) / 100.0
-sim_clv = st.sidebar.slider("High-Value Cutoff ($)", min_value=50, max_value=max_clv, value=default_clv, step=50)
+with st.sidebar.form("dashboard_scenario_form"):
+    sim_risk = st.slider("Churn Risk Threshold (%)", min_value=10, max_value=90, value=50, step=5) / 100.0
+    sim_clv = st.slider("High-Value Cutoff ($)", min_value=50, max_value=max_clv, value=default_clv, step=50)
+    st.form_submit_button("Fetch Data", use_container_width=True)
 
 # ---------------------------------------------------------
 # DYNAMIC KPI CALCULATIONS BASED ON SCENARIO SLIDERS
@@ -177,13 +178,24 @@ with tab_overview:
         vip_display = vip_display[["CustomerID", "Recommended Action", "Projected Loss", "Intervention Cost ($)", "Net ROI ($)", "Churn Risk", "Days Inactive"]]
 
         vip_csv = vip_display.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            "Download VIP interventions CSV",
-            data=vip_csv,
-            file_name="vip_interventions.csv",
-            mime="text/csv",
-            use_container_width=True,
-        )
+        dl1, dl2 = st.columns(2)
+        with dl1:
+            st.download_button(
+                "Download VIP interventions (CSV)",
+                data=vip_csv,
+                file_name="vip_interventions.csv",
+                mime="text/csv",
+                use_container_width=True,
+            )
+        from utils.pdf_utils import create_pdf_table
+        with dl2:
+            st.download_button(
+                "Download VIP interventions (PDF)",
+                data=create_pdf_table("VIP Interventions", vip_display),
+                file_name="vip_interventions.pdf",
+                mime="application/pdf",
+                use_container_width=True,
+            )
 
         styled_vips = dark_table(vip_display).set_properties(subset=vip_display.columns, **{"text-align": "left"})
         st.dataframe(

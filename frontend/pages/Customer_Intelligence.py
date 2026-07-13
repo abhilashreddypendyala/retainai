@@ -4,7 +4,6 @@ from utils.api_client import api_client
 from utils.dashboard_utils import inject_global_styles, page_header, metric_card, dark_table
 from components.customer_table import render_customer_table
 
-st.set_page_config(page_title="RETAIN-AI | Customer Intelligence", page_icon="👥", layout="wide")
 inject_global_styles()
 
 page_header(
@@ -28,17 +27,20 @@ if "selected_customer_360" not in st.session_state:
     st.session_state.selected_customer_360 = None
 
 st.sidebar.markdown("### Dynamic Segmentation")
-sim_risk_slider = st.sidebar.slider(
-    "High-Risk Threshold (Churn %)",
-    min_value=10, max_value=90, value=50, step=5,
-    help="Customers with churn probability above this are classified as High Risk."
-) / 100.0
-
-sim_clv_slider = st.sidebar.slider(
-    "High-Value CLV Cutoff ($)",
-    min_value=100, max_value=2000, value=500, step=50,
-    help="Customers with CLV above this are classified as Whales or Champions."
-)
+with st.sidebar.form("dynamic_segmentation_form"):
+    sim_risk_slider = st.slider(
+        "High-Risk Threshold (Churn %)",
+        min_value=10, max_value=90, value=50, step=5,
+        help="Customers with churn probability above this are classified as High Risk."
+    ) / 100.0
+    
+    sim_clv_slider = st.slider(
+        "High-Value CLV Cutoff ($)",
+        min_value=100, max_value=2000, value=500, step=50,
+        help="Customers with CLV above this are classified as Whales or Champions."
+    )
+    
+    st.form_submit_button("Fetch Data", use_container_width=True)
 
 st.markdown("<div class='section-kicker'>Discovery</div>", unsafe_allow_html=True)
 st.markdown("<div class='section-title'>Search & Filter</div>", unsafe_allow_html=True)
@@ -62,42 +64,45 @@ SEGMENTS = [
     "Unknown"
 ]
 
-with st.form("search_filter_form"):
-    search_col, filter_col = st.columns([1, 2])
-    with search_col:
-        search_input = st.text_input("Search by Customer ID", value=st.session_state.active_search, placeholder="e.g. 12345")
-    
-    with filter_col:
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            try:
-                seg_idx = SEGMENTS.index(st.session_state.active_segment)
-            except ValueError:
-                seg_idx = 0
-            segment_filter = st.selectbox("Segment", options=SEGMENTS, index=seg_idx)
-        with col2:
-            try:
-                ctry_idx = COUNTRIES.index(st.session_state.active_country)
-            except ValueError:
-                ctry_idx = 0
-            country_filter = st.selectbox("Country", options=COUNTRIES, index=ctry_idx)
-        with col3:
-            churn_options = ["All", "High Risk (1)", "Low Risk (0)"]
-            try:
-                ch_idx = churn_options.index(st.session_state.active_churn)
-            except ValueError:
-                ch_idx = 0
-            churn_filter = st.selectbox("Churn Status", options=churn_options, index=ch_idx)
-
-    submit_button = st.form_submit_button("Fetch Customers")
-
-if submit_button:
-    st.session_state.active_search = search_input
-    st.session_state.active_segment = segment_filter
-    st.session_state.active_country = country_filter
-    st.session_state.active_churn = churn_filter
+def on_filter_change():
     st.session_state.customer_page = 1
-    st.session_state.selected_customer_360 = None # Clear 360 view on new search
+    st.session_state.selected_customer_360 = None
+
+@st.cache_data(ttl=300)
+def fetch_all_customer_ids():
+    try:
+        return api_client.get_all_customer_ids()
+    except:
+        return []
+
+all_ids = fetch_all_customer_ids()
+customer_options = ["All"] + all_ids
+
+search_col, filter_col = st.columns([1, 2])
+with search_col:
+    def on_search_change():
+        st.session_state.customer_page = 1
+        st.session_state.selected_customer_360 = None
+        val = st.session_state.search_dropdown
+        st.session_state.active_search = "" if val == "All" else val
+
+    try:
+        search_idx = customer_options.index(st.session_state.active_search) if st.session_state.active_search in customer_options else 0
+    except ValueError:
+        search_idx = 0
+        
+    st.selectbox("Search by Customer ID", options=customer_options, index=search_idx, key="search_dropdown", on_change=on_search_change)
+
+with filter_col:
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.selectbox("Segment", options=SEGMENTS, key="active_segment", on_change=on_filter_change)
+    with col2:
+        st.selectbox("Country", options=COUNTRIES, key="active_country", on_change=on_filter_change)
+    with col3:
+        churn_options = ["All", "High Risk (1)", "Low Risk (0)"]
+        st.selectbox("Churn Status", options=churn_options, key="active_churn", on_change=on_filter_change)
+
 
 st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
 
@@ -167,7 +172,7 @@ if items:
     if st.session_state.selected_customer_360:
         try:
             with st.spinner("Loading Customer 360..."):
-                profile_data = api_client.get_customer_360(st.session_state.selected_customer_360)
+                profile_data = api_client.get_customer_360(st.session_state.selected_customer_360, sim_risk=sim_risk_slider, sim_clv=sim_clv_slider)
                 c_data = profile_data["customer"]
                 tx_data = profile_data["recent_transactions"]
                 rec_data = profile_data["recommendation"]
@@ -194,7 +199,7 @@ if items:
                 st.markdown("#### Risk & Retention Strategy")
                 r1, r2, r3, r4 = st.columns(4)
                 
-                churn_subtext = "High Risk" if c_data['churn_prediction'] == 1 else "Low Risk"
+                churn_subtext = "High Risk" if c_data['churn_probability'] >= 0.5 else "Low Risk"
                 priority_subtext = "Urgent" if rec_data['priority'] == "High" else "Standard"
                 
                 with r1: metric_card("Churn Probability", f"{c_data['churn_probability']:.1%}", churn_subtext)
@@ -205,17 +210,34 @@ if items:
                 st.info(f"**AI Reasoning:** {rec_data['reason']}")
                 
                 st.markdown("<br>", unsafe_allow_html=True)
-                
-                # Transactions Table
-                st.markdown("#### Recent Purchases")
+                # Order Summary Table
+                st.markdown("#### Order Summary")
                 if tx_data:
-                    tx_df = pd.DataFrame(tx_data)
-                    tx_df.columns = ["Invoice", "Date", "Description", "Quantity", "Unit Price", "Total Amount"]
-                    tx_df["Unit Price"] = tx_df["Unit Price"].apply(lambda x: f"${float(x):,.2f}")
-                    tx_df["Total Amount"] = tx_df["Total Amount"].apply(lambda x: f"${float(x):,.2f}")
-                    st.dataframe(dark_table(tx_df).set_properties(subset=tx_df.columns, **{"text-align": "left"}), use_container_width=True, hide_index=True)
+                    raw_df = pd.DataFrame(tx_data)
+                    raw_df.columns = ["Invoice", "Date", "Items", "Total Items Bought", "Total Order Amount"]
+                    
+                    # Add Serial Number
+                    raw_df.insert(0, "#", range(1, len(raw_df) + 1))
+                    
+                    from utils.pdf_utils import create_pdf_table
+                    
+                    # Generate Downloads (Unformatted for accuracy)
+                    csv_data = raw_df.to_csv(index=False).encode('utf-8')
+                    pdf_data = create_pdf_table(f"CUSTOMER {c_data['customer_id']} ORDER SUMMARY", raw_df)
+                    
+                    # Create beautifully formatted UI version
+                    ui_df = raw_df.copy()
+                    ui_df["Total Order Amount"] = ui_df["Total Order Amount"].apply(lambda x: f"${float(x):,.2f}")
+                    
+                    # Layout buttons
+                    dl1, dl2, dl3 = st.columns([1, 1, 2])
+                    with dl1: st.download_button("Download CSV", data=csv_data, file_name=f"Customer_{c_data['customer_id']}_Orders.csv", mime="text/csv", use_container_width=True)
+                    with dl2: st.download_button("Download PDF", data=pdf_data, file_name=f"Customer_{c_data['customer_id']}_Orders.pdf", mime="application/pdf", use_container_width=True)
+                    
+                    st.markdown("<br>", unsafe_allow_html=True)
+                    st.dataframe(dark_table(ui_df).set_properties(subset=ui_df.columns, **{"text-align": "left"}), use_container_width=True, hide_index=True)
                 else:
-                    st.info("No recent transactions found for this customer.")
+                    st.info("No order history found for this customer.")
                 
                 st.markdown("</div>", unsafe_allow_html=True)
                 
