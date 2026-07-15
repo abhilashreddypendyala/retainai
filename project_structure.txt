@@ -1,12 +1,12 @@
-retainai-clv-churn
+retainai
 |   .env.example
 |   .gitignore
 |   project_structure.txt
 |   README.md
 |   requirements.txt
 |   
-+---.venv
-|   (contents omitted for brevity)
++---.streamlit
+|       config.toml
 |
 +---backend
 |   |   __init__.py
@@ -68,25 +68,28 @@ retainai-clv-churn
 |           online_retail_II.xlsx
 |
 +---database
+|       README.md
 |       retail.db
 |
 +---docs
-|   \---milestones
-|           M01_Foundation.md
-|           M02_SQLite_Integration.md
-|           M03_FastAPI_Backend_Foundation.md
-|           M04A_Dashboard_Backend.md
-|           M04B_Dashboard_Frontend_Integration.md
-|           M05A_Customer_Backend_Foundation.md
-|           M05B_Customer_Explorer_Frontend.md
-|           M05C_Customer_360.md
-|           M06A_Prediction_Backend.md
-|           M06B_Prediction_Center_Frontend.md
-|           M07_Model_Insights.md
-|           M08_Reports_Center.md
+|   \---screenshots
+|           customer_intelligence.png
+|           customer_intelligence1.png
+|           dashboard.png
+|           dashboard1.png
+|           model_insights.png
+|           model_insights1.png
+|           model_insights2.png
+|           prediction_center.png
+|           prediction_center1.png
+|           reports.png
+|           segmentation_analytics.png
 |
 +---frontend
 |   |   app.py
+|   |
+|   +---assets
+|   |       logo.png
 |   |
 |   +---components
 |   |       customer_table.py
@@ -103,6 +106,7 @@ retainai-clv-churn
 |   \---utils
 |           api_client.py
 |           dashboard_utils.py
+|           pdf_utils.py
 |
 +---models
 |   \---churn

@@ -9,8 +9,8 @@ inject_global_styles()
 page_header(
     "CUSTOMER INTELLIGENCE",
     "Customer Explorer",
-    "Browse, search, and filter the customer base.",
-    ["Customer Data", "Search", "Filter"]
+    "Search, filter, and inspect individual customer profiles.",
+    None
 )
 
 if "customer_page" not in st.session_state:
@@ -26,21 +26,39 @@ if "active_churn" not in st.session_state:
 if "selected_customer_360" not in st.session_state:
     st.session_state.selected_customer_360 = None
 
+if "ci_risk_slider" not in st.session_state:
+    st.session_state.ci_risk_slider = 50
+if "ci_risk_manual" not in st.session_state:
+    st.session_state.ci_risk_manual = 50
+if "ci_clv_slider" not in st.session_state:
+    st.session_state.ci_clv_slider = 500
+if "ci_clv_manual" not in st.session_state:
+    st.session_state.ci_clv_manual = 500
+
+def ci_sync_risk_from_slider():
+    st.session_state.ci_risk_manual = st.session_state.ci_risk_slider
+def ci_sync_risk_from_manual():
+    st.session_state.ci_risk_slider = st.session_state.ci_risk_manual
+
+def ci_sync_clv_from_slider():
+    st.session_state.ci_clv_manual = st.session_state.ci_clv_slider
+def ci_sync_clv_from_manual():
+    st.session_state.ci_clv_slider = st.session_state.ci_clv_manual
+
 st.sidebar.markdown("### Dynamic Segmentation")
-with st.sidebar.form("dynamic_segmentation_form"):
-    sim_risk_slider = st.slider(
-        "High-Risk Threshold (Churn %)",
-        min_value=10, max_value=90, value=50, step=5,
-        help="Customers with churn probability above this are classified as High Risk."
-    ) / 100.0
-    
-    sim_clv_slider = st.slider(
-        "High-Value CLV Cutoff ($)",
-        min_value=100, max_value=2000, value=500, step=50,
-        help="Customers with CLV above this are classified as Whales or Champions."
-    )
-    
-    st.form_submit_button("Fetch Data", use_container_width=True)
+st.sidebar.slider("High-Risk Threshold (Churn %)", min_value=0, max_value=100, step=1, key="ci_risk_slider", on_change=ci_sync_risk_from_slider)
+st.sidebar.number_input("Manual Input: Risk (%)", min_value=0, max_value=100, step=1, key="ci_risk_manual", on_change=ci_sync_risk_from_manual)
+
+st.sidebar.markdown("<br>", unsafe_allow_html=True)
+
+st.sidebar.slider("High-Value CLV Cutoff ($)", min_value=0, max_value=10000, step=50, key="ci_clv_slider", on_change=ci_sync_clv_from_slider)
+st.sidebar.number_input("Manual Input: Cutoff ($)", min_value=0, max_value=10000, step=50, key="ci_clv_manual", on_change=ci_sync_clv_from_manual)
+
+st.sidebar.markdown("<br>", unsafe_allow_html=True)
+st.sidebar.button("Fetch Data", type="primary", use_container_width=True)
+
+sim_risk_slider = st.session_state.ci_risk_slider / 100.0
+sim_clv_slider = st.session_state.ci_clv_slider
 
 st.markdown("<div class='section-kicker'>Discovery</div>", unsafe_allow_html=True)
 st.markdown("<div class='section-title'>Search & Filter</div>", unsafe_allow_html=True)
@@ -164,7 +182,7 @@ if items:
     with st.form("customer_360_form"):
         customer_ids = [item["customer_id"] for item in items]
         selected_id = st.selectbox("Select Customer", options=customer_ids)
-        view_btn = st.form_submit_button("View Customer 360")
+        view_btn = st.form_submit_button("View Customer 360", type="primary")
         
     if view_btn:
         st.session_state.selected_customer_360 = selected_id

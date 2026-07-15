@@ -9,9 +9,9 @@ inject_global_styles()
 
 page_header(
     "MODEL INSIGHTS",
-    "Explainable AI",
-    "Understand the underlying logic, performance metrics, and business interpretations of the Churn Prediction model.",
-    ["Interpretability", "Metrics", "Validation"]
+    "Model Performance",
+    "Evaluate prediction quality and model reliability.",
+    None
 )
 
 try:

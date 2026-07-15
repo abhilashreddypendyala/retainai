@@ -9,9 +9,9 @@ inject_global_styles()
 
 page_header(
     "PREDICTION CENTER",
-    "Live Churn Predictions",
-    "Run real-time predictions using the trained Logistic Regression model.",
-    ["Machine Learning", "Inference", "Interactive"]
+    "Churn Prediction",
+    "Predict churn probability for existing or new customers.",
+    None
 )
 
 # Initialize recent predictions list in session state
@@ -31,11 +31,10 @@ if mode == "Existing Customer":
     st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
     st.markdown("#### Search Existing Customer")
     
-    with st.form("existing_customer_form"):
-        search_col, _ = st.columns([1, 1])
-        with search_col:
-            search_query = st.text_input("Customer ID (or part of it)", placeholder="e.g. 12345")
-        search_btn = st.form_submit_button("Search")
+    search_col, _ = st.columns([1, 1])
+    with search_col:
+        search_query = st.text_input("Customer ID (or part of it)", placeholder="e.g. 12345")
+    search_btn = st.button("Search", type="primary")
         
     if "search_results" not in st.session_state:
         st.session_state.search_results = []
@@ -49,9 +48,8 @@ if mode == "Existing Customer":
             
     if st.session_state.search_results:
         customer_options = [c["customer_id"] for c in st.session_state.search_results]
-        with st.form("predict_existing_form"):
-            selected_id = st.selectbox("Select Customer to Predict", options=customer_options)
-            predict_btn = st.form_submit_button("Generate Prediction")
+        selected_id = st.selectbox("Select Customer to Predict", options=customer_options)
+        predict_btn = st.button("Generate Prediction", type="primary")
             
         if predict_btn:
             try:
@@ -89,20 +87,19 @@ else:
     st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
     st.markdown("#### Enter Manual Features")
     
-    with st.form("manual_prediction_form"):
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            recency = st.number_input("Recency (Days)", min_value=0.0, value=30.0)
-            tenure = st.number_input("Tenure (Days)", min_value=0.0, value=150.0)
-            item_diversity = st.number_input("Item Diversity", min_value=1.0, value=15.0)
-        with col2:
-            frequency = st.number_input("Frequency (Orders)", min_value=1.0, value=5.0)
-            velocity = st.number_input("Velocity (Orders/Mo)", min_value=0.0, value=1.5)
-        with col3:
-            monetary = st.number_input("Monetary Value ($)", min_value=0.0, value=1000.0)
-            aov = st.number_input("Average Order Value ($)", min_value=0.0, value=200.0)
-            
-        predict_btn = st.form_submit_button("Generate Prediction")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        recency = st.number_input("Recency (Days)", min_value=0.0, value=30.0)
+        tenure = st.number_input("Tenure (Days)", min_value=0.0, value=150.0)
+        item_diversity = st.number_input("Item Diversity", min_value=1.0, value=15.0)
+    with col2:
+        frequency = st.number_input("Frequency (Orders)", min_value=1.0, value=5.0)
+        velocity = st.number_input("Velocity (Orders/Mo)", min_value=0.0, value=1.5)
+    with col3:
+        monetary = st.number_input("Monetary Value ($)", min_value=0.0, value=1000.0)
+        aov = st.number_input("Average Order Value ($)", min_value=0.0, value=200.0)
+        
+    predict_btn = st.button("Generate Prediction", type="primary")
         
     if predict_btn:
         try:

@@ -7,6 +7,7 @@ from pandas.io.formats.style import Styler
 
 
 def inject_global_styles() -> None:
+    st.logo("frontend/assets/logo.png")
     st.markdown(
         """
         <style>
@@ -43,8 +44,12 @@ def inject_global_styles() -> None:
         [data-testid="stHeader"],
         [data-testid="stToolbar"],
         [data-testid="stDecoration"],
-        .main {
-            background: transparent !important;
+        [data-testid="stSidebar"] {
+            background-color: transparent !important;
+        }
+        
+        [data-testid="stLogo"] {
+            height: 3.5rem !important;
         }
 
         [data-testid="stAppViewContainer"] > .main {

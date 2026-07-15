@@ -8,9 +8,6 @@ __pycache__/
 # Environment Variables
 .env
 
-# Database
-*.db
-
 # Jupyter
 .ipynb_checkpoints/
 
@@ -21,5 +18,3 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-
-database/retail.db

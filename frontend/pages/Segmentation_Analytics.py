@@ -9,21 +9,49 @@ inject_global_styles()
 
 df_master = load_data()
 
+if "sa_risk_slider" not in st.session_state:
+    st.session_state.sa_risk_slider = 50
+if "sa_risk_manual" not in st.session_state:
+    st.session_state.sa_risk_manual = 50
+
+default_clv = int(df_master["predicted_90d_clv"].quantile(0.75))
+if "sa_clv_slider" not in st.session_state:
+    st.session_state.sa_clv_slider = default_clv
+if "sa_clv_manual" not in st.session_state:
+    st.session_state.sa_clv_manual = default_clv
+
+def sa_sync_risk_from_slider():
+    st.session_state.sa_risk_manual = st.session_state.sa_risk_slider
+def sa_sync_risk_from_manual():
+    st.session_state.sa_risk_slider = st.session_state.sa_risk_manual
+
+def sa_sync_clv_from_slider():
+    st.session_state.sa_clv_manual = st.session_state.sa_clv_slider
+def sa_sync_clv_from_manual():
+    st.session_state.sa_clv_slider = st.session_state.sa_clv_manual
+
 st.sidebar.markdown("### Scenario Controls")
-with st.sidebar.form("segmentation_scenario_form"):
-    sim_risk = st.slider("Churn Risk Threshold (%)", min_value=10, max_value=90, value=50, step=5) / 100.0
-    default_clv = int(df_master["predicted_90d_clv"].quantile(0.75))
-    max_clv = int(df_master["predicted_90d_clv"].max())
-    sim_clv = st.slider("High-Value Cutoff ($)", min_value=50, max_value=max_clv, value=default_clv, step=50)
-    st.form_submit_button("Fetch Data", use_container_width=True)
+st.sidebar.slider("Churn Risk Threshold (%)", min_value=0, max_value=100, step=1, key="sa_risk_slider", on_change=sa_sync_risk_from_slider)
+st.sidebar.number_input("Manual Input: Risk (%)", min_value=0, max_value=100, step=1, key="sa_risk_manual", on_change=sa_sync_risk_from_manual)
+
+st.sidebar.markdown("<br>", unsafe_allow_html=True)
+
+st.sidebar.slider("High-Value Cutoff ($)", min_value=0, max_value=10000, step=50, key="sa_clv_slider", on_change=sa_sync_clv_from_slider)
+st.sidebar.number_input("Manual Input: Cutoff ($)", min_value=0, max_value=10000, step=50, key="sa_clv_manual", on_change=sa_sync_clv_from_manual)
+
+st.sidebar.markdown("<br>", unsafe_allow_html=True)
+st.sidebar.button("Fetch Data", type="primary", use_container_width=True)
+
+sim_risk = st.session_state.sa_risk_slider / 100.0
+sim_clv = st.session_state.sa_clv_slider
 
 df_sim = build_segmented_frame(df_master, sim_risk, sim_clv)
 
 page_header(
-    "Customer Segments",
-    "Customer segment breakdown",
-    "Segment-level revenue view.",
-    ["Segmentation", "Revenue distribution", "Portfolio mix"],
+    "SEGMENTATION ANALYTICS",
+    "Customer Segmentation",
+    "Analyze customer groups based on value, engagement, and churn risk.",
+    None
 )
 
 segment_summary = df_sim.groupby("Segment", as_index=False)["predicted_90d_clv"].sum().sort_values("predicted_90d_clv", ascending=False)

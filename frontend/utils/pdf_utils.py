@@ -17,17 +17,20 @@ class PDFReport(FPDF):
         self.set_font("helvetica", 'I', 8)
         self.cell(0, 10, text=f'Page {self.page_no()}', align='C')
 
+def _sanitize(text: str) -> str:
+    return str(text).encode('latin-1', 'replace').decode('latin-1')
+
 def create_pdf_report(title: str, text_content: str) -> bytes:
-    pdf = PDFReport(title=title)
+    pdf = PDFReport(title=_sanitize(title))
     pdf.add_page()
     pdf.set_font("helvetica", size=11)
     
-    pdf.multi_cell(0, 8, text=text_content)
+    pdf.multi_cell(0, 8, text=_sanitize(text_content))
         
     return bytes(pdf.output())
 
 def create_pdf_table(title: str, df: pd.DataFrame) -> bytes:
-    pdf = PDFReport(title=title)
+    pdf = PDFReport(title=_sanitize(title))
     pdf.add_page()
     
     if df.empty:
@@ -40,12 +43,12 @@ def create_pdf_table(title: str, df: pd.DataFrame) -> bytes:
         # Header
         row = table.row()
         for col in df.columns:
-            row.cell(str(col))
+            row.cell(_sanitize(str(col)))
         # Data
         for _, df_row in df.iterrows():
             row = table.row()
             for item in df_row:
-                row.cell(str(item))
+                row.cell(_sanitize(str(item)))
                 
     return bytes(pdf.output())
 

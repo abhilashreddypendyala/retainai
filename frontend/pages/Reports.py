@@ -6,10 +6,10 @@ from utils.dashboard_utils import inject_global_styles, page_header
 inject_global_styles()
 
 page_header(
-    "REPORTS & EXPORT",
-    "Data Delivery Center",
-    "Export backend-generated executive summaries and batch prediction results for offline analysis.",
-    ["Export", "CSV", "Reporting"]
+    "REPORTS",
+    "Reports & Export",
+    "Generate executive reports and export customer analytics.",
+    None
 )
 
 @st.cache_data(ttl=600)
@@ -22,12 +22,10 @@ def fetch_report(report_type):
     if report_type == "high_risk": return api_client.get_high_risk_report_csv()
     if report_type == "segment": return api_client.get_segment_summary_csv()
 
-@st.cache_data(ttl=600)
 def generate_pdf_report(title, text):
     from utils.pdf_utils import create_pdf_report
     return create_pdf_report(title, text)
 
-@st.cache_data(ttl=600)
 def generate_pdf_csv(title, csv_data):
     from utils.pdf_utils import create_pdf_from_csv
     return create_pdf_from_csv(title, csv_data)
@@ -88,7 +86,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 # ---------------------------------------------------------
 st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("<div class='section-kicker'>Raw Data</div>", unsafe_allow_html=True)
-st.markdown("<div class='section-title'>CSV Exports</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-title'>Exports</div>", unsafe_allow_html=True)
 
 csv_cols = st.columns(3)
 

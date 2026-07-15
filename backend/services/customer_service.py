@@ -44,8 +44,8 @@ def _get_countries_for_customers(cursor, customer_ids: List[str]) -> dict:
     if not customer_ids:
         return {}
     placeholders = ','.join('?' * len(customer_ids))
-    cursor.execute(f"SELECT customer_id, MAX(country) as country FROM transactions WHERE customer_id IN ({placeholders}) GROUP BY customer_id", customer_ids)
-    return {row['customer_id']: row['country'] for row in cursor.fetchall()}
+    cursor.execute(f"SELECT customer_id, GROUP_CONCAT(DISTINCT country) as country FROM transactions WHERE customer_id IN ({placeholders}) GROUP BY customer_id", customer_ids)
+    return {row['customer_id']: row['country'].replace(',', ', ') if row['country'] else "Unknown" for row in cursor.fetchall()}
 
 def _row_to_summary(row, country: str) -> CustomerSummary:
     return CustomerSummary(
