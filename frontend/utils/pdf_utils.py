@@ -30,27 +30,37 @@ def create_pdf_report(title: str, text_content: str) -> bytes:
     return bytes(pdf.output())
 
 def create_pdf_table(title: str, df: pd.DataFrame) -> bytes:
-    pdf = PDFReport(title=_sanitize(title))
-    pdf.add_page()
-    
-    if df.empty:
-        pdf.set_font("helvetica", size=10)
-        pdf.cell(0, 10, text="No data available")
-        return bytes(pdf.output())
+    try:
+        pdf = PDFReport(title=_sanitize(title))
+        pdf.add_page()
         
-    pdf.set_font("helvetica", size=9)
-    with pdf.table() as table:
-        # Header
-        row = table.row()
-        for col in df.columns:
-            row.cell(_sanitize(str(col)))
-        # Data
-        for _, df_row in df.iterrows():
+        if df.empty:
+            pdf.set_font("helvetica", size=10)
+            pdf.cell(0, 10, text="No data available")
+            return bytes(pdf.output())
+            
+        pdf.set_font("helvetica", size=8)
+        with pdf.table() as table:
+            # Header
             row = table.row()
-            for item in df_row:
-                row.cell(_sanitize(str(item)))
-                
-    return bytes(pdf.output())
+            for col in df.columns:
+                row.cell(_sanitize(str(col)))
+            # Data
+            for _, df_row in df.iterrows():
+                row = table.row()
+                for item in df_row:
+                    text = str(item)
+                    if len(text) > 80:
+                        text = text[:77] + "..."
+                    row.cell(_sanitize(text))
+                    
+        return bytes(pdf.output())
+    except Exception as e:
+        pdf = PDFReport(title=_sanitize(title))
+        pdf.add_page()
+        pdf.set_font("helvetica", size=9)
+        pdf.multi_cell(0, 6, text="Summary Data:\n\n" + _sanitize(df.to_string()))
+        return bytes(pdf.output())
 
 def create_pdf_from_csv(title: str, csv_string: str) -> bytes:
     df = pd.read_csv(io.StringIO(csv_string))
