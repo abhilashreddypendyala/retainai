@@ -198,32 +198,35 @@ if items:
                 st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
                 
                 # Header
+                clean_segment = str(c_data['segment']).split(' (')[0].strip()
                 st.markdown(f"### Customer ID: {c_data['customer_id']} 🌍 {c_data['country']}")
-                st.markdown(f"**Segment:** {c_data['segment']}")
+                st.markdown(f"**Segment:** {clean_segment}")
                 st.markdown("<br>", unsafe_allow_html=True)
                 
                 # Metrics Row 1: Business
                 st.markdown("#### Business Metrics")
-                m1, m2, m3, m4, m5 = st.columns(5)
-                with m1: metric_card("Customer Lifetime Value", f"${c_data['clv']:,.2f}", "")
-                with m2: metric_card("Total Revenue", f"${c_data['monetary']:,.2f}", "")
-                with m3: metric_card("Total Orders", f"{c_data['frequency']:,}", "")
-                with m4: metric_card("Avg Order Value", f"${c_data['avg_order_value']:,.2f}", "")
-                with m5: metric_card("Purchase Freq.", f"{c_data['purchase_frequency']:.2f}", "")
+                m1, m2, m3, m4 = st.columns(4)
+                with m1: metric_card("Customer Lifetime Value", f"${c_data['clv']:,.2f}", "Expected 90D Revenue", accent="linear-gradient(90deg, #34d399, #10b981)")
+                with m2: metric_card("Total Revenue", f"${c_data['monetary']:,.2f}", "Historical Spend")
+                with m3: metric_card("Total Orders", f"{len(tx_data):,}", "Unique Invoices")
+                with m4: metric_card("Avg Order Value", f"${c_data['avg_order_value']:,.2f}", "Per Transaction")
                 
                 st.markdown("<br>", unsafe_allow_html=True)
                 
-                # Metrics Row 2: Risk & Rec
+                # Metrics Row 2: Risk & Retention Strategy
                 st.markdown("#### Risk & Retention Strategy")
-                r1, r2, r3, r4 = st.columns(4)
+                r1, r2, r3, r4 = st.columns([1, 1.6, 0.8, 0.8])
                 
                 churn_subtext = "High Risk" if c_data['churn_probability'] >= 0.5 else "Low Risk"
-                priority_subtext = "Urgent" if rec_data['priority'] == "High" else "Standard"
+                churn_accent = "linear-gradient(90deg, #fb7185, #e11d48)" if c_data['churn_probability'] >= 0.5 else "linear-gradient(90deg, #38bdf8, #0284c7)"
                 
-                with r1: metric_card("Churn Probability", f"{c_data['churn_probability']:.1%}", churn_subtext)
-                with r2: metric_card("Recommended Action", rec_data['action'], "")
-                with r3: metric_card("Priority Level", rec_data['priority'], priority_subtext)
-                with r4: metric_card("Estimated ROI", rec_data['estimated_roi'], "")
+                priority_subtext = "Urgent Action Required" if rec_data['priority'] == "High" else "Monitor Activity"
+                priority_accent = "linear-gradient(90deg, #fb7185, #e11d48)" if rec_data['priority'] == "High" else "linear-gradient(90deg, #a855f7, #6366f1)"
+                
+                with r1: metric_card("Churn Probability", f"{c_data['churn_probability']:.1%}", churn_subtext, accent=churn_accent)
+                with r2: metric_card("Recommended Action", rec_data['action'], "AI Retention Strategy")
+                with r3: metric_card("Priority Level", rec_data['priority'], priority_subtext, accent=priority_accent)
+                with r4: metric_card("Estimated ROI", rec_data['estimated_roi'], "Expected Return")
                 
                 st.info(f"**AI Reasoning:** {rec_data['reason']}")
                 

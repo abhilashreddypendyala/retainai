@@ -130,4 +130,16 @@ class APIClient:
     def get_segment_summary_csv(self) -> str:
         return self._get_text("/reports/segment-summary")
 
+    def analyze_dataset(self, file_bytes: bytes, filename: str) -> dict:
+        """Sends an uploaded CSV or Excel file to the backend for Dataset Intelligence analysis."""
+        url = f"{self.base_url.rstrip('/')}/dataset/analyze"
+        try:
+            files = {"file": (filename, file_bytes, "application/octet-stream")}
+            response = self.session.post(url, files=files, timeout=300)
+            response.raise_for_status()
+            return response.json()
+        except RequestException as e:
+            logger.error(f"API request failed for POST {url}: {e}")
+            raise
+
 api_client = APIClient()

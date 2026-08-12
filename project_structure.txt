@@ -16,6 +16,7 @@ retainai
 |   |       __init__.py
 |   |       customers.py
 |   |       dashboard.py
+|   |       dataset.py
 |   |       health.py
 |   |       model.py
 |   |       prediction.py
@@ -34,10 +35,27 @@ retainai
 |   |       __init__.py
 |   |       model_loader.py
 |   |
+|   +---pipeline
+|   |   |   __init__.py
+|   |   |   pipeline.py
+|   |   |
+|   |   +---analytics
+|   |   |       __init__.py
+|   |   |       churn.py
+|   |   |       clv.py
+|   |   |       segmentation.py
+|   |   |
+|   |   \---preprocessing
+|   |           __init__.py
+|   |           cleaning.py
+|   |           feature_engineering.py
+|   |           rfm.py
+|   |
 |   +---schemas
 |   |       __init__.py
 |   |       customer.py
 |   |       dashboard.py
+|   |       dataset.py
 |   |       model.py
 |   |       prediction.py
 |   |       report.py
@@ -109,9 +127,13 @@ retainai
 |           pdf_utils.py
 |
 +---models
-|   \---churn
-|           feature_scaler.pkl
-|           lr_champion.pkl
+|   +---churn
+|   |       feature_scaler.pkl
+|   |       lr_champion.pkl
+|   |
+|   \---clv
+|           bgf_model.pkl
+|           ggf_model.pkl
 |
 +---notebooks
 |       01_data_preprocessing_and_cleaning.ipynb
