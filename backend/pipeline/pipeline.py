@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import gc
 from typing import Dict, Any, List
 
 from backend.pipeline.preprocessing.cleaning import validate_and_clean_data
@@ -18,33 +17,13 @@ def run_dataset_intelligence(df_raw_input: pd.DataFrame) -> Dict[str, Any]:
     """
     # Stage 1: Preprocessing Pipeline
     df_clean = validate_and_clean_data(df_raw_input)
-    # Pre-calculate transaction values before deleting df_clean later
-    total_transactions = int(df_clean['InvoiceNo'].nunique())
-    total_revenue = float(df_clean['TotalAmount'].sum())
-    
-    del df_raw_input
-    gc.collect()
-
     df_rfm = generate_rfm(df_clean)
     df_features = generate_advanced_features(df_clean, df_rfm)
-    
-    del df_rfm
-    gc.collect()
 
     # Stage 2: Analytics Pipeline
     df_clv = clv_model_loader.predict_batch(df_clean, df_features)
-    
-    del df_features
-    del df_clean
-    gc.collect()
-    
     df_churn = predict_batch_churn(df_clv)
-    del df_clv
-    gc.collect()
-    
     df_final = assign_customer_segments(df_churn)
-    del df_churn
-    gc.collect()
 
     # Clean field names for API standard compliance
     df_final = df_final.rename(columns={
@@ -70,6 +49,8 @@ def run_dataset_intelligence(df_raw_input: pd.DataFrame) -> Dict[str, Any]:
 
     # Compute KPI Summaries required for Business Dashboard
     total_customers = int(len(df_final))
+    total_transactions = int(df_clean['InvoiceNo'].nunique())
+    total_revenue = float(df_clean['TotalAmount'].sum())
     avg_clv = float(df_final['clv'].mean()) if total_customers > 0 else 0.0
 
     high_risk_count = int((df_final['risk_level'] == 'High').sum())

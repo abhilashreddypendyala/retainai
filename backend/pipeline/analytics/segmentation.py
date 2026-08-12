@@ -7,7 +7,7 @@ def assign_customer_segments(df_features: pd.DataFrame) -> pd.DataFrame:
     Refactored directly from research notebook 06_customer_segmentation.ipynb.
     Assigns customers into the 4 strategic retention quadrants using exact 75th percentile CLV and 50% Churn Risk thresholds.
     """
-    df_out = df_features
+    df_out = df_features.copy()
 
     # Calculate CLV threshold (Top 25% of predicted CLV)
     clv_threshold = df_out['clv'].quantile(0.75)

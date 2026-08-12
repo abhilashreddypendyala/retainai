@@ -25,9 +25,9 @@ def generate_rfm(df: pd.DataFrame, cutoff_date: pd.Timestamp = None) -> pd.DataF
     }, inplace=True)
 
     # Ensure recency is non-negative
-    rfm['Recency'] = rfm['Recency'].apply(lambda r: max(r, 0.0)).astype('float32')
-    rfm['Frequency'] = rfm['Frequency'].astype('float32')
-    rfm['Monetary'] = rfm['Monetary'].astype('float32')
+    rfm['Recency'] = rfm['Recency'].apply(lambda r: max(r, 0.0)).astype(float)
+    rfm['Frequency'] = rfm['Frequency'].astype(float)
+    rfm['Monetary'] = rfm['Monetary'].astype(float)
 
     # Attach customer's primary country for reporting
     if 'Country' in df.columns:

@@ -32,6 +32,8 @@ def validate_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
     Refactored directly from research notebook 01_data_preprocessing_and_cleaning.ipynb.
     Standardizes schema, removes invalid transactions, cancellations, and computes TotalAmount.
     """
+    df = df.copy()
+    
     # 1. Standardize column names
     df.rename(columns=lambda col: COLUMN_MAPPING.get(col, COLUMN_MAPPING.get(str(col).strip(), col)), inplace=True)
     # Also check case-insensitive matches if needed
@@ -54,7 +56,7 @@ def validate_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
         df['Description'] = 'Product Item'
 
     # 2. Missing value treatment: Drop rows without CustomerID
-    df = df.dropna(subset=['CustomerID'])
+    df = df.dropna(subset=['CustomerID']).copy()
     
     if df.empty:
         raise ValueError("Dataset validation failed: No valid records remaining after dropping null Customer IDs.")
@@ -94,15 +96,6 @@ def validate_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
         raise ValueError("Dataset validation failed: Invalid InvoiceDate formats across all records.")
 
     df['Date'] = pd.to_datetime(df['InvoiceDate'].dt.date)
-    
-    # Downcast memory-heavy types
-    df['Quantity'] = df['Quantity'].astype('float32')
-    df['UnitPrice'] = df['UnitPrice'].astype('float32')
-    df['TotalAmount'] = df['TotalAmount'].astype('float32')
-    
-    for col in ['InvoiceNo', 'StockCode', 'CustomerID', 'Country']:
-        if col in df.columns:
-            df[col] = df[col].astype('category')
     
     # Pipeline Assertions
     assert df['Quantity'].min() > 0, "Pipeline Error: Negative quantities detected after cleaning!"
