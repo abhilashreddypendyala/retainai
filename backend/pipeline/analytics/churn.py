@@ -16,7 +16,7 @@ def predict_batch_churn(df_features: pd.DataFrame) -> pd.DataFrame:
     Reuses the existing Champion Logistic Regression Model (lr_champion.pkl) and feature_scaler.pkl without retraining.
     Computes exact granular churn probabilities and assigns Risk Level classifications.
     """
-    df_out = df_features.copy()
+    df_out = df_features
     
     if churn_model.model is None or churn_model.scaler is None:
         churn_model.load()

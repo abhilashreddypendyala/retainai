@@ -95,8 +95,7 @@ class CLVModelLoader:
         """
         if self.bgf is None or self.ggf is None:
             self.load_or_train()
-
-        df_out = df_features.copy()
+        df_out = df_features
         
         try:
             # Transform inference transactions into Lifetimes RFM format
