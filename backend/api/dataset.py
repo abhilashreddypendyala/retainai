@@ -46,14 +46,9 @@ async def analyze_dataset_endpoint(file: UploadFile = File(...)):
         results = run_dataset_intelligence(df_raw)
         logger.info(f"Successfully analyzed {results['kpi_summary']['total_customers']} customers from {filename}.")
         return results
-    except ValueError as ve:
+    except (ValueError, AssertionError) as ve:
         logger.warning(f"Dataset validation error for {filename}: {str(ve)}")
         raise HTTPException(status_code=400, detail=f"Dataset validation error: {str(ve)}")
-    except AssertionError as ae:
-        logger.warning(f"Dataset assertion error for {filename}: {str(ae)}")
-        raise HTTPException(status_code=400, detail=f"Dataset assertion error: {str(ae)}")
     except Exception as exc:
-        import traceback
-        traceback.print_exc()
         logger.error(f"Unhandled pipeline failure for {filename}: {str(exc)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred during analytical execution: {str(exc)}")

@@ -5,16 +5,22 @@ from typing import Tuple
 REQUIRED_COLUMNS = ['InvoiceNo', 'CustomerID', 'UnitPrice', 'Quantity', 'InvoiceDate']
 
 COLUMN_MAPPING = {
-    'invoice': 'InvoiceNo',
+    'Invoice': 'InvoiceNo',
     'invoiceno': 'InvoiceNo',
+    'Customer ID': 'CustomerID',
+    'customer_id': 'CustomerID',
     'customer id': 'CustomerID',
     'customerid': 'CustomerID',
-    'price': 'UnitPrice',
+    'Price': 'UnitPrice',
     'unitprice': 'UnitPrice',
-    'stock code': 'StockCode',
+    'unit_price': 'UnitPrice',
+    'price': 'UnitPrice',
+    'Stock Code': 'StockCode',
     'stockcode': 'StockCode',
-    'invoice date': 'InvoiceDate',
+    'stock_code': 'StockCode',
+    'Invoice Date': 'InvoiceDate',
     'invoicedate': 'InvoiceDate',
+    'invoice_date': 'InvoiceDate',
     'quantity': 'Quantity',
     'description': 'Description',
     'country': 'Country'
@@ -23,15 +29,18 @@ COLUMN_MAPPING = {
 def validate_and_clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
     Stage 1: Preprocessing - Validation and Data Cleaning
+    Refactored directly from research notebook 01_data_preprocessing_and_cleaning.ipynb.
     Standardizes schema, removes invalid transactions, cancellations, and computes TotalAmount.
     """
     df = df.copy()
     
-    # 1. Standardize column names: lowercase and strip spaces
-    df.rename(columns=lambda col: str(col).strip().lower(), inplace=True)
-    
-    # Map to expected pipeline columns
-    df.rename(columns=COLUMN_MAPPING, inplace=True)
+    # 1. Standardize column names
+    df.rename(columns=lambda col: COLUMN_MAPPING.get(col, COLUMN_MAPPING.get(str(col).strip(), col)), inplace=True)
+    # Also check case-insensitive matches if needed
+    col_dict = {col.lower().strip(): col for col in df.columns}
+    for k, v in COLUMN_MAPPING.items():
+        if k.lower().strip() in col_dict and col_dict[k.lower().strip()] not in df.columns:
+            df.rename(columns={col_dict[k.lower().strip()]: v}, inplace=True)
             
     # Check for required columns
     missing = [col for col in REQUIRED_COLUMNS if col not in df.columns]
