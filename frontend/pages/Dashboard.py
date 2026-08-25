@@ -221,24 +221,13 @@ else:
     vip_display = vip_display[["CustomerID", "Recommended Action", "Projected Loss", "Intervention Cost ($)", "Net ROI ($)", "Churn Risk", "Days Inactive"]]
 
     vip_csv = vip_display.to_csv(index=False).encode("utf-8")
-    dl1, dl2 = st.columns(2)
-    with dl1:
-        st.download_button(
-            "Download VIP interventions (CSV)",
-            data=vip_csv,
-            file_name="vip_interventions.csv",
-            mime="text/csv",
-            use_container_width=True,
-        )
-    from utils.pdf_utils import create_pdf_table
-    with dl2:
-        st.download_button(
-            "Download VIP interventions (PDF)",
-            data=create_pdf_table("VIP Interventions", vip_display),
-            file_name="vip_interventions.pdf",
-            mime="application/pdf",
-            use_container_width=True,
-        )
+    st.download_button(
+        "Download VIP interventions (CSV)",
+        data=vip_csv,
+        file_name="vip_interventions.csv",
+        mime="text/csv",
+        use_container_width=True,
+    )
 
     styled_vips = dark_table(vip_display).set_properties(subset=vip_display.columns, **{"text-align": "left"})
     st.dataframe(

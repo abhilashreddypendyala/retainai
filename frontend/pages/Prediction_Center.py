@@ -7,7 +7,7 @@ import plotly.express as px
 from datetime import datetime
 from utils.api_client import api_client
 from utils.dashboard_utils import inject_global_styles, page_header, dark_table, metric_card
-from utils.pdf_utils import create_pdf_table
+
 from components.prediction_result import render_prediction_result
 from components.customer_table import render_customer_table
 
@@ -574,19 +574,15 @@ def render_di_reports_tab(res):
         for k, v in kpi.items():
             summary_records.append({"Metric": k.replace("_", " ").title(), "Value": f"${v:,.2f}" if "revenue" in k or "clv" in k else f"{v:,}"})
         summary_df = pd.DataFrame(summary_records)
-        try:
-            pdf_bytes = create_pdf_table(f"Executive Summary - {st.session_state.uploaded_file_name}", summary_df)
-            st.download_button(
-                label="📄 Download Executive Summary (PDF)",
-                data=pdf_bytes,
-                file_name=f"Executive_Summary_{st.session_state.uploaded_file_name}.pdf",
-                mime="application/pdf",
-                type="secondary",
-                use_container_width=True
-            )
-            st.caption("A publication-grade PDF executive report detailing KPI totals and primary analysis outcomes.")
-        except Exception as e:
-            st.error(f"Failed to generate PDF Report: {e}")
+        st.download_button(
+            label="📄 Download Executive Summary (CSV)",
+            data=summary_df.to_csv(index=False).encode("utf-8"),
+            file_name=f"Executive_Summary_{st.session_state.uploaded_file_name}.csv",
+            mime="text/csv",
+            type="secondary",
+            use_container_width=True
+        )
+        st.caption("A CSV executive report detailing KPI totals and primary analysis outcomes.")
             
     st.markdown("<br><hr style='border-color: #1a1e23;'><br>", unsafe_allow_html=True)
     st.markdown("#### 2. Specialized Cohort Exports")

@@ -240,20 +240,16 @@ if items:
                     # Add Serial Number
                     raw_df.insert(0, "#", range(1, len(raw_df) + 1))
                     
-                    from utils.pdf_utils import create_pdf_table
-                    
                     # Generate Downloads (Unformatted for accuracy)
                     csv_data = raw_df.to_csv(index=False).encode('utf-8')
-                    pdf_data = create_pdf_table(f"CUSTOMER {c_data['customer_id']} ORDER SUMMARY", raw_df)
                     
                     # Create beautifully formatted UI version
                     ui_df = raw_df.copy()
                     ui_df["Total Order Amount"] = ui_df["Total Order Amount"].apply(lambda x: f"${float(x):,.2f}")
                     
                     # Layout buttons
-                    dl1, dl2, dl3 = st.columns([1, 1, 2])
+                    dl1, dl2 = st.columns([1, 3])
                     with dl1: st.download_button("Download CSV", data=csv_data, file_name=f"Customer_{c_data['customer_id']}_Orders.csv", mime="text/csv", use_container_width=True)
-                    with dl2: st.download_button("Download PDF", data=pdf_data, file_name=f"Customer_{c_data['customer_id']}_Orders.pdf", mime="application/pdf", use_container_width=True)
                     
                     st.markdown("<br>", unsafe_allow_html=True)
                     st.dataframe(dark_table(ui_df).set_properties(subset=ui_df.columns, **{"text-align": "left"}), use_container_width=True, hide_index=True)
