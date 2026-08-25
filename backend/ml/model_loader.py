@@ -53,8 +53,14 @@ class ChurnModel:
             self.train_model()
             
         if os.path.exists(MODEL_PATH) and os.path.exists(SCALER_PATH):
-            self.model = joblib.load(MODEL_PATH)
-            self.scaler = joblib.load(SCALER_PATH)
+            try:
+                self.model = joblib.load(MODEL_PATH)
+                self.scaler = joblib.load(SCALER_PATH)
+            except Exception as e:
+                print(f"Warning: Failed to load Churn models ({e}). Triggering native retraining fallback...")
+                self.train_model()
+                self.model = joblib.load(MODEL_PATH)
+                self.scaler = joblib.load(SCALER_PATH)
         else:
             print("Error: Churn models could not be loaded or generated.")
 

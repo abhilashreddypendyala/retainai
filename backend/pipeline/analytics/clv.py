@@ -27,11 +27,15 @@ class CLVModelLoader:
 
     def load_or_train(self):
         if os.path.exists(BGF_PATH) and os.path.exists(GGF_PATH):
-            self.bgf = BetaGeoFitter()
-            self.bgf.load_model(BGF_PATH)
-            self.ggf = GammaGammaFitter()
-            self.ggf.load_model(GGF_PATH)
-            return
+            try:
+                self.bgf = BetaGeoFitter()
+                self.bgf.load_model(BGF_PATH)
+                self.ggf = GammaGammaFitter()
+                self.ggf.load_model(GGF_PATH)
+                return
+            except Exception as e:
+                print(f"Warning: Failed to load CLV models ({e}). Triggering native retraining fallback...")
+                # Models are corrupt or incompatible; fall through to retraining
 
         # Models do not exist yet; train once using the verified historical training dataset
         if not os.path.exists(CLV_MODEL_DIR):
