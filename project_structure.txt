@@ -29,7 +29,6 @@ retainai
 |   +---database
 |   |       __init__.py
 |   |       connection.py
-|   |       setup.py
 |   |
 |   +---ml
 |   |       __init__.py
@@ -112,7 +111,6 @@ retainai
 |   +---components
 |   |       customer_table.py
 |   |       prediction_result.py
-|   |       __init__.py
 |   +---pages
 |   |       Customer_Intelligence.py
 |   |       Dashboard.py
@@ -142,7 +140,6 @@ retainai
 |       04_churn_prediction_modeling.ipynb
 |       05_clv_modeling.ipynb
 |       06_customer_segmentation.ipynb
-|       newplot.png
 |
 \---scripts
         create_database.py

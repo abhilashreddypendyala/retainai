@@ -37,24 +37,25 @@ else:
     max_clv = 1000
     default_clv = 500
 
-if "sim_risk_slider" not in st.session_state:
-    st.session_state.sim_risk_slider = 50
-if "sim_risk_manual" not in st.session_state:
-    st.session_state.sim_risk_manual = 50
-if "sim_clv_slider" not in st.session_state:
-    st.session_state.sim_clv_slider = default_clv
-if "sim_clv_manual" not in st.session_state:
-    st.session_state.sim_clv_manual = default_clv
+if "master_sim_risk" not in st.session_state:
+    st.session_state.master_sim_risk = 50
+if "master_sim_clv" not in st.session_state:
+    st.session_state.master_sim_clv = (default_clv // 50) * 50
 
 def sync_risk_from_slider():
-    st.session_state.sim_risk_manual = st.session_state.sim_risk_slider
+    st.session_state.master_sim_risk = st.session_state.sim_risk_slider
 def sync_risk_from_manual():
-    st.session_state.sim_risk_slider = st.session_state.sim_risk_manual
+    st.session_state.master_sim_risk = st.session_state.sim_risk_manual
 
 def sync_clv_from_slider():
-    st.session_state.sim_clv_manual = st.session_state.sim_clv_slider
+    st.session_state.master_sim_clv = st.session_state.sim_clv_slider
 def sync_clv_from_manual():
-    st.session_state.sim_clv_slider = st.session_state.sim_clv_manual
+    st.session_state.master_sim_clv = st.session_state.sim_clv_manual
+
+st.session_state.sim_risk_slider = st.session_state.master_sim_risk
+st.session_state.sim_risk_manual = st.session_state.master_sim_risk
+st.session_state.sim_clv_slider = st.session_state.master_sim_clv
+st.session_state.sim_clv_manual = st.session_state.master_sim_clv
 
 st.sidebar.markdown("### Scenario Controls")
 st.sidebar.slider("Churn Risk Threshold (%)", min_value=0, max_value=100, step=1, key="sim_risk_slider", on_change=sync_risk_from_slider)

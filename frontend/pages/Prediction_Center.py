@@ -314,25 +314,26 @@ def render_di_segmentation_tab(res):
     df_seg = pd.DataFrame(res["customers"])
 
     # Initialize Scenario Controls in session state
-    if "di_sa_risk_slider" not in st.session_state:
-        st.session_state.di_sa_risk_slider = 50
-    if "di_sa_risk_manual" not in st.session_state:
-        st.session_state.di_sa_risk_manual = 50
+    if "master_di_sa_risk" not in st.session_state:
+        st.session_state.master_di_sa_risk = 50
 
     default_clv = int(df_seg["clv"].quantile(0.75)) if len(df_seg) > 0 and pd.notnull(df_seg["clv"].quantile(0.75)) else 400
-    if "di_sa_clv_slider" not in st.session_state:
-        st.session_state.di_sa_clv_slider = default_clv
-    if "di_sa_clv_manual" not in st.session_state:
-        st.session_state.di_sa_clv_manual = default_clv
+    if "master_di_sa_clv" not in st.session_state:
+        st.session_state.master_di_sa_clv = (default_clv // 50) * 50
 
     def sync_risk_slider():
-        st.session_state.di_sa_risk_manual = st.session_state.di_sa_risk_slider
+        st.session_state.master_di_sa_risk = st.session_state.di_sa_risk_slider
     def sync_risk_manual():
-        st.session_state.di_sa_risk_slider = st.session_state.di_sa_risk_manual
+        st.session_state.master_di_sa_risk = st.session_state.di_sa_risk_manual
     def sync_clv_slider():
-        st.session_state.di_sa_clv_manual = st.session_state.di_sa_clv_slider
+        st.session_state.master_di_sa_clv = st.session_state.di_sa_clv_slider
     def sync_clv_manual():
-        st.session_state.di_sa_clv_slider = st.session_state.di_sa_clv_manual
+        st.session_state.master_di_sa_clv = st.session_state.di_sa_clv_manual
+
+    st.session_state.di_sa_risk_slider = st.session_state.master_di_sa_risk
+    st.session_state.di_sa_risk_manual = st.session_state.master_di_sa_risk
+    st.session_state.di_sa_clv_slider = st.session_state.master_di_sa_clv
+    st.session_state.di_sa_clv_manual = st.session_state.master_di_sa_clv
 
     st.markdown("<div class='content-panel'>", unsafe_allow_html=True)
     st.markdown("<div class='section-kicker'>Simulation</div>", unsafe_allow_html=True)

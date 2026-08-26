@@ -9,26 +9,27 @@ inject_global_styles()
 
 df_master = load_data()
 
-if "sa_risk_slider" not in st.session_state:
-    st.session_state.sa_risk_slider = 50
-if "sa_risk_manual" not in st.session_state:
-    st.session_state.sa_risk_manual = 50
+if "master_sa_risk" not in st.session_state:
+    st.session_state.master_sa_risk = 50
 
 default_clv = int(df_master["predicted_90d_clv"].quantile(0.75))
-if "sa_clv_slider" not in st.session_state:
-    st.session_state.sa_clv_slider = default_clv
-if "sa_clv_manual" not in st.session_state:
-    st.session_state.sa_clv_manual = default_clv
+if "master_sa_clv" not in st.session_state:
+    st.session_state.master_sa_clv = (default_clv // 50) * 50
 
 def sa_sync_risk_from_slider():
-    st.session_state.sa_risk_manual = st.session_state.sa_risk_slider
+    st.session_state.master_sa_risk = st.session_state.sa_risk_slider
 def sa_sync_risk_from_manual():
-    st.session_state.sa_risk_slider = st.session_state.sa_risk_manual
+    st.session_state.master_sa_risk = st.session_state.sa_risk_manual
 
 def sa_sync_clv_from_slider():
-    st.session_state.sa_clv_manual = st.session_state.sa_clv_slider
+    st.session_state.master_sa_clv = st.session_state.sa_clv_slider
 def sa_sync_clv_from_manual():
-    st.session_state.sa_clv_slider = st.session_state.sa_clv_manual
+    st.session_state.master_sa_clv = st.session_state.sa_clv_manual
+
+st.session_state.sa_risk_slider = st.session_state.master_sa_risk
+st.session_state.sa_risk_manual = st.session_state.master_sa_risk
+st.session_state.sa_clv_slider = st.session_state.master_sa_clv
+st.session_state.sa_clv_manual = st.session_state.master_sa_clv
 
 st.sidebar.markdown("### Scenario Controls")
 st.sidebar.slider("Churn Risk Threshold (%)", min_value=0, max_value=100, step=1, key="sa_risk_slider", on_change=sa_sync_risk_from_slider)
