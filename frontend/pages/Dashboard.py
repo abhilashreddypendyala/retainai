@@ -121,8 +121,27 @@ page_header(
 
 
 st.markdown("<div class='section-kicker'>Business Impact</div>", unsafe_allow_html=True)
-st.markdown("<div class='section-title'>Portfolio overview</div>", unsafe_allow_html=True)
-st.markdown("<div class='section-subtitle'>Use the controls in the sidebar to update the portfolio view.</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-title'>Global Database KPIs</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-subtitle'>Metrics across entire customer base.</div>", unsafe_allow_html=True)
+
+gcol1, gcol2, gcol3, gcol4 = st.columns(4)
+total_revenue_base = 5455405.18
+global_active_customers = 3370
+global_high_risk = 1449
+global_revenue_at_risk = 1035270.41
+
+with gcol1:
+    metric_card("Total Revenue Base", f"${total_revenue_base:,.0f}", "Historical generated revenue", "linear-gradient(90deg, #34d399, #10b981)")
+with gcol2:
+    metric_card("Total Active Customers", f"{global_active_customers:,}", "Total unique profiles", "linear-gradient(90deg, #60a5fa, #3b82f6)")
+with gcol3:
+    metric_card("Revenue At Risk", f"${global_revenue_at_risk:,.0f}", "All customers > 50% risk", "linear-gradient(90deg, #fb7185, #e11d48)")
+with gcol4:
+    metric_card("High Risk Customers", f"{global_high_risk:,}", "Total high-risk profiles", "linear-gradient(90deg, #f59e0b, #d97706)")
+
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<div class='section-title' style='font-size: 18px; margin-bottom: 6px;'>Portfolio overview</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-subtitle' style='margin-bottom: 12px;'>Use the controls in the sidebar to update the portfolio view.</div>", unsafe_allow_html=True)
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:

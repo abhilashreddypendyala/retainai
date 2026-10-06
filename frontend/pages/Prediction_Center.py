@@ -243,7 +243,22 @@ def render_di_customers_tab(res):
     end_idx = min(total_items, start_idx + page_size)
     page_df = df_filt.iloc[start_idx:end_idx]
     
-    st.markdown(f"#### Matching Customers ({total_items:,} found)")
+    dl_col1, dl_col2 = st.columns([3, 1])
+    with dl_col1:
+        st.markdown(f"#### Matching Customers ({total_items:,} found)")
+    with dl_col2:
+        if total_items > 0:
+            export_df = df_filt[["customer_id", "country", "segment", "risk_level", "clv", "churn_probability", "monetary"]].copy()
+            export_df.columns = ["Customer ID", "Country", "Segment", "Risk Level", "Predicted CLV", "Churn Probability", "Historical Spend"]
+            csv_data = export_df.to_csv(index=False).encode("utf-8")
+            st.download_button(
+                label="📥 Download Filtered",
+                data=csv_data,
+                file_name="filtered_customers.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+
     if total_items == 0:
         st.warning("No customers match the selected filters.")
         return
