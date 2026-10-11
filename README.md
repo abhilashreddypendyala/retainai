@@ -2,14 +2,14 @@
 
 ### CLV-Driven Customer Churn Prediction & Retention Intelligence Platform
 
-An end-to-end AI-powered customer analytics platform that combines Customer Lifetime Value (CLV) analysis, churn prediction, customer segmentation, explainable AI, and executive reporting into a unified decision-support system.
+An end-to-end AI-powered customer analytics platform that combines Customer Lifetime Value (CLV) analysis, churn prediction, customer segmentation, explainable AI, batch dataset intelligence, and executive reporting into a unified decision-support system.
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
+![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue?logo=python)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi)
 ![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit)
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite)
 ![Scikit--Learn](https://img.shields.io/badge/Scikit--Learn-ML-F7931E?logo=scikitlearn)
-
+![Plotly](https://img.shields.io/badge/Plotly-Visualizations-3F4F75?logo=plotly)
 
 ---
 
@@ -17,130 +17,141 @@ An end-to-end AI-powered customer analytics platform that combines Customer Life
 
 RetainAI is a production-style customer intelligence platform developed to help businesses identify customers at risk of churn, analyze Customer Lifetime Value (CLV), explore customer segments, and support data-driven retention strategies. The platform combines statistical customer value modeling with machine learning-based churn prediction to provide actionable business insights.
 
-The platform combines machine learning with interactive analytics through a Streamlit frontend, a FastAPI backend, and a SQLite database, providing a modular and scalable architecture suitable for educational, portfolio, and demonstration purposes.
+The platform unites machine learning inference with interactive analytics through a Streamlit frontend, a FastAPI backend, and an analytical data store, providing a modular and scalable architecture suitable for production deployment, portfolio demonstrations, and enterprise decision-making.
 
 ---
 
 # ✨ Key Features
 
 ## 📊 Executive Dashboard
-- Interactive business dashboard with real-time KPIs.
-- Revenue analytics and customer portfolio overview.
-- Customer segmentation and intervention insights.
-- Interactive visualizations powered by Plotly.
+- **Dual-Tier KPI Architecture:**
+  - **Global Database KPIs:** High-level enterprise baselines across the customer base (Total Revenue Base, Active Customers, Revenue at Risk, High Risk Profiles).
+  - **Scenario Portfolio KPIs:** Dynamic forecasts (Projected 90-Day Revenue, Secured Revenue, Revenue at Risk, High-Risk Whales) that respond in real time to custom simulation parameters.
+- **Interactive Scenario Simulator:** Synchronized sidebar sliders and numeric controls to adjust high-risk churn probability thresholds and CLV cutoffs.
+- **Customer Map Visualization:** Interactive risk-vs-value scatter matrix with logarithmic CLV scaling powered by Plotly.
+- **High-Value Interventions:** Actionable intervention table highlighting top accounts requiring immediate retention measures.
 
 ---
 
 ## 👥 Customer Intelligence
-- Search customers by Customer ID.
-- Advanced filtering by country, segment, and churn status.
-- Customer 360 profile with behavioral metrics.
-- Personalized retention recommendations.
+- **Search & Discovery:** Instant customer lookup by Customer ID and advanced filtering by country, segment, and churn status.
+- **Customer 360 Profile:** Comprehensive single-customer view featuring business metrics, risk rating, priority level, and AI-recommended retention actions.
+- **Order History Explorer:** Transaction-level invoice summary with one-click customer receipt CSV export.
+- **Dynamic Scenario Filtering:** Real-time cohort re-segmentation based on custom risk and monetary thresholds.
 
 ---
 
 ## 🎯 Segmentation Analytics
-- RFM-based customer segmentation analysis.
-- Visual exploration of customer segments.
-- Segment-wise revenue and customer distribution.
-- Business insights to identify high-value and at-risk customer groups.
+- **Strategic RFM Matrix:** Classifies customer portfolio into four distinct retention quadrants:
+  - 🚨 **High-Risk Whales:** High CLV, High Churn (immediate VIP concierge outreach).
+  - 🏆 **Loyal Champions:** High CLV, Low Churn (loyalty rewards and upsell opportunities).
+  - ⚠️ **At-Risk Regulars:** Low CLV, High Churn (automated win-back drip campaigns).
+  - 🛡️ **Safe Regulars:** Low CLV, Low Churn (standard engagement and monitoring).
+- **Interactive Matrix Controls:** Real-time quadrant boundary adjustment via synchronized sliders and numerical inputs.
+- **Revenue Mix & Distribution:** Segment-wise revenue share donut charts and customer distribution analytics.
+- **Prescriptive Strategy Cards:** Tactical business playbooks and recommendations for each segment.
 
 ---
 
 ## 🤖 Prediction Center
-- Predict churn probability for existing customers.
-- Manual prediction for hypothetical customers.
-- Real-time machine learning inference using FastAPI.
-- Session-based prediction history.
+Offers three dedicated operational modes for real-time and batch customer evaluation:
+
+1. **Existing Customer Mode:**
+   - Search any existing customer by ID to auto-populate their historical metrics.
+   - Generates real-time churn probability, risk classification, and retention strategies.
+
+2. **New / Hypothetical Customer Simulation:**
+   - Interactive 7-feature simulation form (Recency, Frequency, Monetary, Tenure, Purchase Velocity, Average Order Value, Item Diversity).
+   - Dual slider and manual numeric inputs for granular what-if analysis.
+
+3. **Dataset Intelligence (Batch Processing Workspace):**
+   - **Batch File Ingestion:** Ingest raw transaction datasets (`.csv`, `.xlsx`, `.xls`) matching standard retail schemas.
+   - **In-Memory Analytical Pipeline:** Runs end-to-end data cleaning, RFM aggregation, behavioral feature engineering, CLV estimation (BG/NBD + Gamma-Gamma), and churn inference without modifying persistent databases.
+   - **Batch Dashboard:** Cohort KPI summaries, churn risk distribution charts, and quadrant breakdowns.
+   - **Customer Directory & 360:** Paginated customer directory with multi-column filtering, sorting, **📥 Download Filtered Customers CSV**, and a deep-dive Customer 360 profile featuring **7 individual behavioral metric cards** (Recency, Frequency, Monetary, Tenure, Velocity, AOV, Item Diversity).
+   - **Dynamic Quadrant Simulator:** Interactive scenario testing for uploaded cohorts with scatter plots, revenue mix charts, and cohort tables.
+   - **Batch Export Center:** One-click CSV exports for complete predictions, executive summaries, high-risk cohorts, and segment summaries.
 
 ---
 
-## 🧠 Explainable AI
-- Model performance metrics.
-- ROC Curve visualization.
-- Confusion Matrix.
-- Feature importance analysis.
-- Business interpretation of model outputs.
+## 🧠 Model Insights (Explainable AI)
+- **Comprehensive Evaluation Metrics:** Displays model Accuracy, Precision, Recall, F1 Score, and ROC-AUC.
+- **ROC Curve & Confusion Matrix:** Interactive diagnostic plots evaluating classification trade-offs and decision boundaries.
+- **Feature Importance Analysis:** Ranked feature impact highlighting the primary behavioral drivers of churn.
+- **Business Interpretation:** Plain-language explanations of model weights to support stakeholder trust.
 
 ---
 
 ## 📄 Reports & Export
-- Executive summary generation.
-- Customer report export.
-- High-risk customer report.
-- Segment summary export.
-- Prediction history export.
+- **Executive Summary:** Generates structured executive business summaries with key financial exposure metrics.
+- **High-Speed CSV Exports:** One-click downloads for full customer records, high-risk intervention lists, and segment summaries.
+- **Session History Export:** Download predictions performed during the active user session.
 
 ---
 
-## ⚙️ Production Architecture
-- Streamlit frontend.
-- FastAPI backend.
-- SQLite database.
-- Modular service-layer architecture.
-- RESTful API communication.
+## ⚙️ Modular Architecture
+- Decoupled Streamlit frontend and FastAPI REST backend.
+- Pure RESTful JSON and streaming file communication.
+- Self-contained SQLite analytical database.
+- Clean separation of API, services, ML loaders, data pipelines, and schemas.
 
 ---
 
 # 🏗️ System Architecture
 
-RetainAI follows a modular, production-style architecture that separates the presentation layer, business logic, machine learning services, and data storage. This design improves scalability, maintainability, and makes the application easy to extend with future features.
+RetainAI follows a modular, decoupled architecture that isolates the user interface, business services, analytical pipelines, and data storage:
 
 ```text
-                           ┌──────────────────────────────┐
-                           │       Streamlit Frontend     │
-                           │──────────────────────────────│
-                           │ • Dashboard                 │
-                           │ • Customer Intelligence     │
-                           │ • Segmentation Analytics    │
-                           │ • Prediction Center         │
-                           │ • Model Insights            │
-                           │ • Reports & Export          │
-                           └──────────────┬──────────────┘
-                                          │
-                                  REST API Requests
-                                          │
-                                          ▼
-                           ┌──────────────────────────────┐
-                           │       FastAPI Backend        │
-                           │──────────────────────────────│
-                           │ • Dashboard API             │
-                           │ • Customer API              │
-                           │ • Prediction API            │
-                           │ • Model API                │
-                           │ • Reports API             │
-                           └──────────────┬──────────────┘
-                                          │
-                    ┌─────────────────────┴─────────────────────┐
-                    │                                           │
-                    ▼                                           ▼
-        ┌──────────────────────┐                  ┌────────────────────────┐
-        │  Machine Learning    │                  │     SQLite Database     │
-        │──────────────────────│                  │────────────────────────│
-        │ • Churn Prediction   │                  │ • Customers            │
-        │ • CLV Analytics      │                  │ • Transactions         │
-        │ • Feature Scaling    │                  │ • Model Metadata       │
-        │ • Model Inference    │                  │ • Predictions          │
-        └──────────────────────┘                  └────────────────────────┘
+                           ┌─────────────────────────────────────────┐
+                           │            Streamlit Frontend           │
+                           │─────────────────────────────────────────│
+                           │ • Executive Dashboard                   │
+                           │ • Segmentation Analytics                │
+                           │ • Customer Intelligence                 │
+                           │ • Prediction Center (Single & Batch DI) │
+                           │ • Model Insights (Explainable AI)       │
+                           │ • Reports & Export                      │
+                           └────────────────────┬────────────────────┘
+                                                │
+                                      REST API Requests (JSON / Files)
+                                                │
+                                                ▼
+                           ┌─────────────────────────────────────────┐
+                           │             FastAPI Backend             │
+                           │─────────────────────────────────────────│
+                           │ • Dashboard API     • Customer API      │
+                           │ • Prediction API    • Dataset API (DI)  │
+                           │ • Model API         • Reports API       │
+                           └────────┬───────────────────────┬────────┘
+                                    │                       │
+           ┌────────────────────────┴──────┐                │
+           ▼                               ▼                ▼
+┌──────────────────────┐       ┌──────────────────────┐  ┌────────────────────────┐
+│  In-Memory Pipeline  │       │   Machine Learning   │  │    SQLite Database     │
+│──────────────────────│       │──────────────────────│  │────────────────────────│
+│ • Data Cleaning      │       │ • Churn Prediction   │  │ • Customers Table      │
+│ • RFM Transformation │       │   (Logistic Regress) │  │ • Transactions Table   │
+│ • Feature Extraction │       │ • CLV Estimation     │  │ • Predictions History  │
+│ • Dynamic Batch Runs │       │   (BG/NBD + GG)      │  │ • Model Metadata       │
+└──────────────────────┘       └──────────────────────┘  └────────────────────────┘
 ```
 
 ### Architecture Highlights
 
-- **Frontend:** Built with Streamlit for an interactive analytics experience.
-- **Backend:** FastAPI exposes REST APIs and separates business logic from the UI.
-- **Machine Learning:** Scikit-learn models provide real-time churn prediction and customer analytics.
-- **Database:** SQLite stores customer records, transaction history, predictions, and model metadata.
-- **Communication:** All frontend interactions occur through REST APIs, ensuring a clean separation of concerns.
+- **Presentation Layer:** Streamlit delivers responsive, state-synchronized interfaces with dark-mode styling and Plotly visualizations.
+- **Service & API Layer:** FastAPI exposes validated REST endpoints with Pydantic schemas, managing caching, filtering, and business logic.
+- **In-Memory Pipeline Engine:** Executes multi-stage data processing and ML inference dynamically during batch uploads without database mutation.
+- **Machine Learning Layer:** Serialized Scikit-learn and Lifetimes models provide real-time churn scores and 90-day CLV projections.
+- **Persistence Layer:** SQLite stores core customer records, historical transactions, predictions, and model evaluation metadata.
 
 ---
 
 # 📸 Project Screenshots
 
-The following screenshots showcase the major modules of the RetainAI platform.
+The following screenshots showcase the core modules of the RetainAI platform:
 
-## 📊 Dashboard
-
-> Executive dashboard providing KPIs, customer insights, revenue analytics, and business performance visualization.
+## 📊 Executive Dashboard
+> Dual-tier enterprise KPIs, risk-vs-value customer map, and immediate intervention lists.
 
 ![Dashboard1](docs/screenshots/dashboard.png)
 ![Dashboard2](docs/screenshots/dashboard1.png)
@@ -148,42 +159,48 @@ The following screenshots showcase the major modules of the RetainAI platform.
 ---
 
 ## 🎯 Segmentation Analytics
-
-> Explore customer segments using RFM-based analytics and visualize segment distribution, customer behavior, and business value.
+> Strategic RFM quadrant mapping, scenario threshold sliders, and segment revenue share analysis.
 
 ![Segmentation Analytics](docs/screenshots/segmentation_analytics.png)
 
 ---
 
 ## 👥 Customer Intelligence
-
-> Search, filter, and analyze customers with a detailed Customer 360 profile including business metrics and retention insights.
+> Multi-criteria search, Customer 360 profiles, AI retention recommendations, and transaction history.
 
 ![Customer Intelligence1](docs/screenshots/customer_intelligence.png)
 ![Customer Intelligence2](docs/screenshots/customer_intelligence1.png)
 
 ---
 
-## 🤖 Prediction Center
+## 🤖 Prediction Center & Dataset Intelligence
+> Single-customer predictions, hypothetical what-if simulations, and batch dataset intelligence workspace.
 
-> Predict churn probability for existing customers or evaluate hypothetical customers using the trained machine learning model.
-
+> Existing Customer
 ![Prediction Center1](docs/screenshots/prediction_center.png)
 ![Prediction Center2](docs/screenshots/prediction_center1.png)
 
+> New Customer
+![Prediction Center3](docs/screenshots/prediction_center2.png)
+
+> Customer Intelligence (Batch)
+![Prediction Center4](docs/screenshots/prediction_center3.png)
+![Prediction Center5](docs/screenshots/prediction_center4.png)
+![Prediction Center6](docs/screenshots/prediction_center5.png)
+![Prediction Center7](docs/screenshots/prediction_center6.png)
+![Prediction Center8](docs/screenshots/prediction_center7.png)
+![Prediction Center9](docs/screenshots/prediction_center8.png)
 ---
 
 ## 📄 Reports & Export
-
-> Generate executive summaries and export customer, high-risk, and segmentation reports for business analysis.
+> High-speed CSV exports, executive summaries, and session prediction downloads.
 
 ![Reports](docs/screenshots/reports.png)
 
 ---
 
 ## 🧠 Model Insights
-
-> Understand model performance through evaluation metrics, ROC Curve, Confusion Matrix, and feature importance analysis.
+> Performance metrics, ROC curve, Confusion Matrix, and feature importance rankings.
 
 ![Model Insights1](docs/screenshots/model_insights.png)
 ![Model Insights2](docs/screenshots/model_insights1.png)
@@ -193,91 +210,102 @@ The following screenshots showcase the major modules of the RetainAI platform.
 
 # 💻 Technology Stack
 
-RetainAI is built using a modern, modular technology stack that separates the frontend, backend, machine learning, and data layers.
+RetainAI is built using a modern, decoupled Python stack:
 
 | Layer | Technology | Purpose |
-|--------|------------|---------|
-| **Frontend** | Streamlit | Interactive web application and dashboards |
-| **Backend** | FastAPI | REST API and business logic |
-| **Machine Learning** | Scikit-learn | Churn prediction and customer analytics |
-| **Data Processing** | Pandas, NumPy | Data cleaning and feature engineering |
-| **Database** | SQLite | Customer, transaction, and model data storage |
-| **Visualization** | Plotly | Interactive charts and analytics |
-| **Model Serialization** | Joblib | Saving and loading trained ML models |
-| **Validation** | Pydantic | Request and response validation |
-| **Environment Management** | Python Virtual Environment (.venv) | Dependency isolation |
-| **Version Control** | Git & GitHub | Source code management |
+| :--- | :--- | :--- |
+| **Frontend** | Streamlit | Responsive web application, state synchronization, interactive UI |
+| **Backend** | FastAPI | High-performance RESTful API, service routing, file ingestion |
+| **Machine Learning** | Scikit-learn | Churn prediction classification and feature preprocessing |
+| **CLV Modeling** | Lifetimes | BG/NBD purchase frequency and Gamma-Gamma monetary value models |
+| **Data Processing** | Pandas, NumPy | Data cleaning, RFM aggregation, and feature engineering |
+| **Storage & Data** | SQLite, Parquet, PyArrow | Fast local SQL queries and high-performance columnar data storage |
+| **Visualization** | Plotly | Dynamic dark-theme charts, scatter matrices, and distributions |
+| **Model Serialization** | Joblib | Serialization and loading of trained machine learning pipelines |
+| **Validation** | Pydantic | Request and response schema validation |
+| **Server** | Uvicorn | ASGI production server for FastAPI |
 
 ---
 
-## 🧠 Machine Learning Models
+## 🧠 Machine Learning Overview
 
-| Component | Algorithm | Purpose |
-|-----------|-----------|---------|
-| Churn Prediction | Logistic Regression | Predicts customer churn probability using behavioral and RFM features. |
-| Feature Scaling | StandardScaler | Normalizes numerical features before model inference. |
-| Customer Lifetime Value (CLV) | BG/NBD + Gamma-Gamma | Estimates projected 90-day Customer Lifetime Value during the data preparation pipeline. |
+| Component | Model / Algorithm | Purpose |
+| :--- | :--- | :--- |
+| **Churn Prediction** | Logistic Regression | Predicts churn probability based on customer RFM and behavioral metrics. |
+| **Feature Scaling** | StandardScaler | Normalizes numerical attributes prior to model inference. |
+| **Customer Lifetime Value** | BG/NBD + Gamma-Gamma | Forecasts 90-day projected transaction volume and monetary value. |
 
 ---
 
-## 📂 Dataset
+## 📂 Dataset Information
 
-- **Dataset:** Online Retail II
-- **Domain:** Retail Customer Analytics
-- **Customers:** ~3,370
-- **Transactions:** ~397,000+
-- **Features:** RFM metrics, CLV indicators, behavioral features, and engineered customer attributes.
-
+- **Dataset:** Online Retail II Dataset
+- **Domain:** E-Commerce / Retail Customer Transactions
+- **Customer Base:** ~3,370 unique analyzed customer profiles
+- **Transactions:** ~397,000+ validated purchase transactions
+- **Core Features:** Recency, Frequency, Monetary, Tenure, Velocity, Average Order Value, Item Diversity, Predicted CLV, and Churn Risk.
 
 ---
 
 # 📂 Project Structure
 
-The project follows a modular architecture that separates the frontend, backend, machine learning pipeline, database, and documentation for better maintainability and scalability.
-
 ```text
 retainai/
 │
-├── backend/                 # FastAPI backend
-│   ├── api/                 # REST API endpoints
-│   ├── config/              # Application configuration
-│   ├── database/            # Database connection utilities
-│   ├── ml/                  # Machine learning model loader
-│   ├── schemas/             # Pydantic request/response models
-│   ├── services/            # Business logic
-│   ├── utils/               # Logging and helper utilities
-│   └── main.py              # FastAPI application entry point
+├── backend/                     # FastAPI backend application
+│   ├── api/                     # REST API route handlers
+│   │   ├── customers.py         # Customer search, filter, and 360 endpoints
+│   │   ├── dashboard.py         # Executive dashboard summary & charts
+│   │   ├── dataset.py           # Dataset Intelligence batch upload & analysis
+│   │   ├── health.py            # Service health & keep-alive endpoint
+│   │   ├── model.py             # Model performance metrics & ROC curves
+│   │   ├── prediction.py        # Single-customer churn inference
+│   │   └── reports.py           # CSV report generators & summaries
+│   ├── config/                  # Settings and environment configuration
+│   ├── database/                # SQLite connection utilities
+│   ├── ml/                      # Model loader with auto-training fallback
+│   ├── pipeline/                # Analytical pipeline engine
+│   │   ├── analytics/           # Churn, CLV, and segmentation engines
+│   │   └── preprocessing/       # Cleaning, RFM, and feature engineering
+│   ├── schemas/                 # Pydantic request/response models
+│   ├── services/                # Business logic and service layers
+│   ├── utils/                   # Logging and helper utilities
+│   └── main.py                  # FastAPI application entry point
 │
-├── frontend/                # Streamlit frontend
-│   ├── assets/              # Images and static resources
-│   ├── components/          # Reusable UI components
-│   ├── pages/               # Application pages
-│   ├── utils/               # API client and UI helpers
-│   └── app.py               # Streamlit entry point
+├── frontend/                    # Streamlit frontend application
+│   ├── assets/                  # Logos and static branding
+│   ├── components/              # Reusable UI tables and metric cards
+│   ├── pages/                   # Application navigation pages
+│   │   ├── Customer_Intelligence.py
+│   │   ├── Dashboard.py
+│   │   ├── Model_Insights.py
+│   │   ├── Prediction_Center.py
+│   │   ├── Reports.py
+│   │   └── Segmentation_Analytics.py
+│   ├── utils/                   # API client and dashboard styling helpers
+│   └── app.py                   # Streamlit multi-page entry point
 │
 ├── data/
-│   ├── raw/                 # Original dataset
-│   └── processed/           # Engineered datasets
+│   ├── raw/                     # Original raw transaction dataset
+│   └── processed/               # Cleaned parquet datasets and feature matrices
 │
 ├── database/
-│   ├── retail.db            # SQLite database
-│   └── README.md            # Database documentation
+│   ├── retail.db                # SQLite database
+│   └── README.md                # Database schema documentation
 │
 ├── docs/
-│   ├── milestones/          # Development milestones
-│   └── screenshots/         # README screenshots
+│   └── screenshots/             # README and presentation screenshots
 │
 ├── models/
-│   └── churn/               # Trained ML models
+│   ├── churn/                   # Churn model weights and scalers
+│   └── clv/                     # Persisted BG/NBD and Gamma-Gamma CLV models
 │
-├── notebooks/               # End-to-end ML pipeline
-│
-├── scripts/                 # Utility scripts
-│
-├── README.md
-├── requirements.txt
-├── .env.example
-└── .gitignore
+├── notebooks/                   # End-to-end ML research and exploration notebooks
+├── scripts/                     # Database generation and setup utilities
+├── README.md                    # Comprehensive project documentation
+├── requirements.txt             # Python dependencies
+├── .env.example                 # Environment configuration template
+└── .gitignore                   # Git version control ignore rules
 ```
 
 ### Repository Highlights
@@ -285,7 +313,7 @@ retainai/
 - **Modular architecture** with a clear separation between frontend, backend, and machine learning.
 - **REST API-based communication** between Streamlit and FastAPI.
 - **Reusable service layer** to isolate business logic from API routes.
-- **Dedicated documentation** for milestones, database schema, and screenshots.
+- **Dedicated documentation** for database schema and screenshots.
 - **Notebook-driven machine learning workflow** for reproducibility.
 
 ---
@@ -367,6 +395,7 @@ Follow the steps below to set up and run RetainAI on your local machine.
 git clone https://github.com/abhilashreddypendyala/retainai.git
 cd retainai
 ```
+
 ---
 
 ## 2️⃣ Create a Virtual Environment
@@ -499,7 +528,7 @@ http://127.0.0.1:8000/docs
 
 ## Available Endpoints
 
-### Health
+### 🏥 Health
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -507,7 +536,7 @@ http://127.0.0.1:8000/docs
 
 ---
 
-### Dashboard
+### 📊 Dashboard
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -518,18 +547,19 @@ http://127.0.0.1:8000/docs
 
 ---
 
-### Customer Intelligence
+### 👥 Customer Intelligence
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/customers` | Returns paginated customer records. |
+| GET | `/customers/ids` | Returns a flat list of all customer IDs for frontend selectors. |
 | GET | `/customers/search` | Searches customers by Customer ID. |
 | GET | `/customers/filter` | Filters customers by segment, country, and churn status. |
 | GET | `/customers/{customer_id}` | Returns the complete Customer 360 profile. |
 
 ---
 
-### Prediction Center
+### 🤖 Prediction Center
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -537,7 +567,15 @@ http://127.0.0.1:8000/docs
 
 ---
 
-### Model Insights
+### 📁 Dataset Intelligence (Batch Analysis)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/dataset/analyze` | Ingests a raw transaction file (CSV/Excel) and returns full batch metrics, risk scores, and segment analytics in-memory. |
+
+---
+
+### 🧠 Model Insights
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -545,7 +583,7 @@ http://127.0.0.1:8000/docs
 
 ---
 
-### Reports
+### 📄 Reports
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -565,31 +603,17 @@ http://127.0.0.1:8000/docs
 - JSON-based communication between frontend and backend.
 - Easily extensible architecture for future APIs.
 
-
 ---
 
 # 🚀 Future Roadmap
 
 RetainAI is designed with a modular architecture that makes it easy to extend with new capabilities. The following enhancements are planned for future releases.
 
-## 🎯 Version 2.0 – Batch Prediction & Enhanced Analytics
-
-- 📁 Upload customer datasets using CSV files.
-- 🤖 Batch churn prediction for multiple customers in a single request.
-- 💰 Batch Customer Lifetime Value (CLV) prediction.
-- 📥 Download prediction results as CSV.
-- 📊 Batch prediction summary dashboard.
-- ⚡ Optimized FastAPI endpoint for high-performance batch inference.
-
----
-
-## ☁️ Cloud & Deployment
+## 🗄️ Database & Infrastructure
 
 - PostgreSQL integration for production environments.
 - Docker containerization.
 - CI/CD pipeline using GitHub Actions.
-- Cloud deployment for both frontend and backend.
-- Environment-specific configuration management.
 
 ---
 
@@ -654,7 +678,6 @@ If you have any suggestions, feedback, or would like to collaborate on AI and Ma
 
 ---
 
----
 ## 👥 Project Team
 
 This project was developed as a collaborative final-year academic project.
@@ -663,6 +686,8 @@ This project was developed as a collaborative final-year academic project.
 - Varun
 - Gopi
 - Balu
+
+---
 
 # 🙏 Acknowledgements
 
@@ -679,6 +704,7 @@ This project was built using several outstanding open-source technologies, inclu
 - FastAPI
 - Streamlit
 - Scikit-learn
+- Lifetimes
 - Pandas
 - NumPy
 - Plotly
